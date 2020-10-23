@@ -1,12 +1,17 @@
 package Agents;
 
 import Behaviours.CyclicSpitMessage;
+import Utils.Parity;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 
 public class Student extends Agent {
+    /**
+     * Parity of the Student's number
+     */
+    private Parity parity;
 
 
     protected  void setup(){
