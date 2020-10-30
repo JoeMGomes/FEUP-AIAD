@@ -1,7 +1,8 @@
 package Agents;
 
-import Behaviours.CyclicSpitMessage;
-import Utils.Parity;
+import jade.content.AgentAction;
+import jade.content.onto.Ontology;
+import jade.content.onto.basic.Action;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
@@ -10,14 +11,12 @@ import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+
 
 public class Student extends Agent {
     /**
      * Parity of the Student's number
      */
-    private Parity parity;
 
     /**
      * Hashmap of the known classes Utility
@@ -25,6 +24,8 @@ public class Student extends Agent {
      * Value= Utility
      */
     private HashMap<AID, Float> classesUtility;
+    private Ontology ontology = Ontologies.ScheduleOntology.getInstance();
+
 
     private void start(){
         ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
@@ -62,7 +63,20 @@ public class Student extends Agent {
         start();
     }
 
+    void sendMessage(AID receiver ,int performative, AgentAction action) {
+// --------------------------------------------------------
 
+        ACLMessage msg = new ACLMessage(performative);
+        msg.setOntology(ontology.getName());
+        try {
+            getContentManager().fillContent(msg, new Action(receiver, action));
+            msg.addReceiver(receiver);
+            send(msg);
+            System.out.println("Contacting server... Please wait!");
+            //addBehaviour(new WaitServerResponse(this));
+        }
+        catch (Exception ex) { ex.printStackTrace(); }
+    }
 
 
 
