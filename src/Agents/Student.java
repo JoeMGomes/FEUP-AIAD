@@ -1,8 +1,10 @@
 package Agents;
 
-import jade.content.AgentAction;
-import jade.content.onto.Ontology;
-import jade.content.onto.basic.Action;
+import Behaviours.ClassHandler;
+import Behaviours.CyclicSpitMessage;
+import Behaviours.StudentHandler;
+import Messages.UtilityRequest;
+import Utils.Parity;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
@@ -10,6 +12,7 @@ import jade.domain.FIPAAgentManagement.*;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 
@@ -17,26 +20,31 @@ public class Student extends Agent {
     /**
      * Parity of the Student's number
      */
-
+    private Parity parity;
     /**
      * Hashmap of the known classes Utility
      * Key= CUClass AID
      * Value= Utility
      */
     private HashMap<AID, Float> classesUtility;
-    private Ontology ontology = Ontologies.ScheduleOntology.getInstance();
 
-
-    private void start(){
+    private void start() throws IOException {
         ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-        requestMsg.setContent("Quero utility");
+
+        requestMsg.setContentObject(new UtilityRequest(parity));
         for (HashMap.Entry<AID, Float> entry : classesUtility.entrySet()) {
             AID key = entry.getKey();
-            //Object value = entry.getValue();
 
             requestMsg.addReceiver(key);
         }
         send(requestMsg);
+    }
+
+    public void storeUtility(AID a, Float util){
+        if(a != null && util != null)
+            classesUtility.put(a,util);
+
+        System.out.println("Added: " + a + ", " + util);
     }
 
     private void getClasses() {
@@ -57,27 +65,41 @@ public class Student extends Agent {
         } catch (FIPAException fe) { fe.printStackTrace(); }
     }
 
-    protected  void setup(){
+    private void getParity(){
+
+        Object[] args = getArguments();
+        String s;
+
+        if (args != null) {
+
+            if(args.length == 0){
+                System.err.println("Invalid Parity. Setting to Even");
+                parity = Parity.EVEN;
+                return;
+            }
+            s = (String) args[0];
+            System.out.println("Parity: " + s);
+            if( s.equalsIgnoreCase("Odd")){
+                parity = Parity.ODD;
+            } else if ( s.equalsIgnoreCase("Even")) {
+                parity = Parity.EVEN;
+            } else {
+                System.err.println("Invalid Parity. Setting to Even");
+                parity = Parity.EVEN;
+            }
+        }
+    }
+    protected void setup(){
         classesUtility = new HashMap<AID, Float>();
         getClasses();
-        start();
-    }
 
-    void sendMessage(AID receiver ,int performative, AgentAction action) {
-// --------------------------------------------------------
-
-        ACLMessage msg = new ACLMessage(performative);
-        msg.setOntology(ontology.getName());
+        getParity();
         try {
-            getContentManager().fillContent(msg, new Action(receiver, action));
-            msg.addReceiver(receiver);
-            send(msg);
-            System.out.println("Contacting server... Please wait!");
-            //addBehaviour(new WaitServerResponse(this));
+            start();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        catch (Exception ex) { ex.printStackTrace(); }
+        addBehaviour(new StudentHandler(this));
     }
-
-
 
 }

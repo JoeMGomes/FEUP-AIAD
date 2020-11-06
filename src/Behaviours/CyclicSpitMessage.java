@@ -14,7 +14,11 @@ public class CyclicSpitMessage extends CyclicBehaviour {
     public void action(){
         ACLMessage msg = myAgent.receive();
         if(msg != null){
-            System.out.println(myAgent.getLocalName() + " received: \n\t" + msg.getContent());
+            try {
+                System.out.println(myAgent.getLocalName() + " received: \n\t" + msg.getContentObject());
+            } catch (UnreadableException e) {
+                e.printStackTrace();
+            }
         } else {
             block();
         }
