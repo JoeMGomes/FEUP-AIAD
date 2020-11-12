@@ -2,6 +2,7 @@ package Agents;
 
 import Behaviours.ClassHandler;
 import Behaviours.CyclicSpitMessage;
+import Behaviours.FIPA_UtilityResponse;
 import Utils.Parity;
 import jade.core.Agent;
 
@@ -11,6 +12,9 @@ import java.util.ArrayList;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.*;
 import jade.domain.FIPAException;
+import jade.domain.FIPANames;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 
 //CUClass - Curricular Unit Class
 public class CUClass extends Agent {
@@ -44,7 +48,13 @@ public class CUClass extends Agent {
         setFields();
 
         //addBehaviour(new CyclicSpitMessage(this));
-        addBehaviour(new ClassHandler(this));
+        //addBehaviour(new ClassHandler(this));
+
+        MessageTemplate template = MessageTemplate.and(
+                MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
+                MessageTemplate.MatchPerformative(ACLMessage.REQUEST) );
+
+        addBehaviour(new FIPA_UtilityResponse(this,  template));
     }
 
     public void setFields() {

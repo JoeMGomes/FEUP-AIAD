@@ -1,8 +1,7 @@
 package Agents;
 
-import Behaviours.ClassHandler;
-import Behaviours.CyclicSpitMessage;
 import Behaviours.StudentHandler;
+import Behaviours.FIPA_UtilityRequest;
 import Messages.UtilityRequest;
 import Utils.Parity;
 import jade.core.AID;
@@ -10,9 +9,11 @@ import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.*;
 import jade.domain.FIPAException;
+import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 
 
@@ -37,7 +38,10 @@ public class Student extends Agent {
 
             requestMsg.addReceiver(key);
         }
-        send(requestMsg);
+        requestMsg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+        requestMsg.setReplyByDate(new Date(System.currentTimeMillis() + 5000));
+
+        addBehaviour(new FIPA_UtilityRequest(this, requestMsg, classesUtility.size()));
     }
 
     public void storeUtility(AID a, Float util){
@@ -99,7 +103,7 @@ public class Student extends Agent {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        addBehaviour(new StudentHandler(this));
+        //addBehaviour(new StudentHandler(this));
     }
 
 }
