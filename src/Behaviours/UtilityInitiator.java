@@ -9,11 +9,11 @@ import jade.proto.AchieveREInitiator;
 
 import java.util.Vector;
 
-public class FIPA_UtilityRequest extends AchieveREInitiator {
+public class UtilityInitiator extends AchieveREInitiator {
 
     private int nResponders;
 
-    public FIPA_UtilityRequest(Agent a, ACLMessage msg, int n_classes) {
+    public UtilityInitiator(Agent a, ACLMessage msg, int n_classes) {
         super(a, msg);
         nResponders = n_classes;
     }
@@ -50,6 +50,8 @@ public class FIPA_UtilityRequest extends AchieveREInitiator {
         if (notifications.size() < nResponders) {
             // Some responder didn't reply within the specified timeout
             System.out.println("Timeout expired: missing "+(nResponders - notifications.size())+" responses");
+        } else {
+
         }
     }
 }

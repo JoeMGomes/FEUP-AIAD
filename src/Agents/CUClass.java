@@ -1,13 +1,10 @@
 package Agents;
 
-import Behaviours.ClassHandler;
-import Behaviours.CyclicSpitMessage;
-import Behaviours.FIPA_UtilityResponse;
+import Behaviours.UtilityResponder;
+import Behaviours.UtilitySubInitiator;
+import Behaviours.UtilitySubResponder;
 import Utils.Parity;
 import jade.core.Agent;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.*;
@@ -38,7 +35,7 @@ public class CUClass extends Agent {
      */
     private int capacity;
 
-
+    private UtilitySubResponder subscriptionBehaviour;
     protected void setup() {
         ServiceDescription sd = new ServiceDescription();
         sd.setType("Curricular Units");
@@ -54,7 +51,8 @@ public class CUClass extends Agent {
                 MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
                 MessageTemplate.MatchPerformative(ACLMessage.REQUEST) );
 
-        addBehaviour(new FIPA_UtilityResponse(this,  template));
+        subscriptionBehaviour = new UtilitySubResponder(this);
+        addBehaviour(subscriptionBehaviour);
     }
 
     public void setFields() {
@@ -134,6 +132,7 @@ public class CUClass extends Agent {
         if (p.equals(Parity.EVEN)) {
             evenStudents++;
         }
+        subscriptionBehaviour.notify(null);
     }
 
 }

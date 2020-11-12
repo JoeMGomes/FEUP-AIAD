@@ -1,7 +1,7 @@
 package Agents;
 
-import Behaviours.StudentHandler;
-import Behaviours.FIPA_UtilityRequest;
+import Behaviours.UtilityInitiator;
+import Behaviours.UtilitySubInitiator;
 import Messages.UtilityRequest;
 import Utils.Parity;
 import jade.core.AID;
@@ -18,6 +18,7 @@ import java.util.HashMap;
 
 
 public class Student extends Agent {
+
     /**
      * Parity of the Student's number
      */
@@ -30,18 +31,9 @@ public class Student extends Agent {
     private HashMap<AID, Float> classesUtility;
 
     private void start() throws IOException {
-        ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 
-        requestMsg.setContentObject(new UtilityRequest(parity));
-        for (HashMap.Entry<AID, Float> entry : classesUtility.entrySet()) {
-            AID key = entry.getKey();
 
-            requestMsg.addReceiver(key);
-        }
-        requestMsg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
-        requestMsg.setReplyByDate(new Date(System.currentTimeMillis() + 5000));
-
-        addBehaviour(new FIPA_UtilityRequest(this, requestMsg, classesUtility.size()));
+        addBehaviour(new UtilitySubInitiator(this,  classesUtility.size()));
     }
 
     public void storeUtility(AID a, Float util){
@@ -69,7 +61,7 @@ public class Student extends Agent {
         } catch (FIPAException fe) { fe.printStackTrace(); }
     }
 
-    private void getParity(){
+    private void getParityArgs(){
 
         Object[] args = getArguments();
         String s;
@@ -97,7 +89,7 @@ public class Student extends Agent {
         classesUtility = new HashMap<AID, Float>();
         getClasses();
 
-        getParity();
+        getParityArgs();
         try {
             start();
         } catch (IOException e) {
@@ -106,4 +98,13 @@ public class Student extends Agent {
         //addBehaviour(new StudentHandler(this));
     }
 
+
+
+    public HashMap<AID, Float> getClassesUtility() {
+        return classesUtility;
+    }
+
+    public Parity getParity() {
+        return parity;
+    }
 }

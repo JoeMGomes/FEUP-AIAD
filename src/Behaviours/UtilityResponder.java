@@ -15,8 +15,8 @@ import jade.proto.AchieveREResponder;
 
 import java.io.IOException;
 
-public class FIPA_UtilityResponse extends AchieveREResponder {
-    public FIPA_UtilityResponse(Agent a, MessageTemplate mt) {
+public class UtilityResponder extends AchieveREResponder {
+    public UtilityResponder(Agent a, MessageTemplate mt) {
         super(a, mt);
     }
 
