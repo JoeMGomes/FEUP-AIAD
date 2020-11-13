@@ -1,19 +1,19 @@
 package Agents;
 
+import Behaviours.AssignInitiator;
 import Behaviours.UtilitySubInitiator;
+import Messages.ParityMessage;
 import Utils.Parity;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.*;
 import jade.domain.FIPAException;
+import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class Student extends Agent {
@@ -48,9 +48,7 @@ public class Student extends Agent {
 
             DFAgentDescription[] classes = DFService.search(this, dfd);
 
-            System.out.println(classes.length + " results");
             for(int i = 0; i < classes.length; i++){
-                System.out.println(classes[i].getName());
                 classesUtility.put(classes[i].getName(), (float)-1);
             }
 
@@ -70,7 +68,6 @@ public class Student extends Agent {
             }
 
             s = (String) args[0];
-            System.out.println("Parity: " + s);
 
             if( s.equalsIgnoreCase("Odd")){
                 parity = Parity.ODD;
@@ -84,43 +81,49 @@ public class Student extends Agent {
     }
 
     private void start(){
-        System.out.println("Starting");
         utilitySubInitiator = new UtilitySubInitiator(this,  classesUtility.size());
         addBehaviour(utilitySubInitiator);
-        System.out.println("Finished starting");
     }
 
     public void storeUtility(AID a, Float util){
         if(a != null && util != null)
             classesUtility.put(a,util);
-
-        System.out.println("Added " + this.getLocalName() + ": " + a + ", " + util);
     }
 
     public void chooseClass(){
+
+        try {
+            Thread.sleep(new Random().nextInt(1500- 500) + 500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         AID bestClass = getBestClass();
 
-        //Another protocol???????????????????
-        ACLMessage proposal = new ACLMessage(ACLMessage.PROPOSE);
-        proposal.addReceiver(bestClass);
+        ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
+        request.addReceiver(bestClass);
         try {
-            proposal.setContentObject(parity);
+            request.setContentObject(new ParityMessage(parity));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        send(proposal);
 
-//        cancelSubscription(bestClass);
+        request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+
+        addBehaviour(new AssignInitiator(this, request,1));
     }
 
     private AID getBestClass(){
         AID aidClass = Collections.max(classesUtility.entrySet(), Comparator.comparing(Map.Entry::getValue)).getKey();
-        System.out.println("Best Class: " + aidClass);
+        System.out.println("Agent: " + this.getLocalName() +" best Class: " + aidClass.getLocalName());
         return aidClass;
     }
 
-    private void cancelSubscription(AID aidClass){
-        utilitySubInitiator.cancel(aidClass, true);
+    public void cancelSubscription(){
+
+        for (HashMap.Entry<AID, Float> entry : getClassesUtility().entrySet()) {
+            utilitySubInitiator.cancel(entry.getKey(), true);
+        }
     }
 
     public HashMap<AID, Float> getClassesUtility() {

@@ -4,11 +4,11 @@ import Utils.Parity;
 
 import java.io.Serializable;
 
-public class UtilityRequest implements Serializable {
+public class ParityMessage implements Serializable {
 
     public Parity parity;
 
-    public UtilityRequest(Parity p){
+    public ParityMessage(Parity p){
         parity = p;
     }
 

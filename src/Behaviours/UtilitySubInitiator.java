@@ -1,7 +1,7 @@
 package Behaviours;
 
 import Agents.Student;
-import Messages.UtilityResponse;
+import Messages.UtilityMessage;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.FIPANames;
@@ -10,10 +10,9 @@ import jade.lang.acl.UnreadableException;
 import jade.proto.SubscriptionInitiator;
 
 import java.io.IOException;
-import java.sql.SQLOutput;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.Vector;
-import java.util.concurrent.TimeUnit;
 
 public class UtilitySubInitiator extends SubscriptionInitiator {
 
@@ -21,7 +20,6 @@ public class UtilitySubInitiator extends SubscriptionInitiator {
 
     public UtilitySubInitiator(Agent a, int n_classes) {
         super(a, new ACLMessage(ACLMessage.SUBSCRIBE));
-        System.out.println("Subscribing");
         nResponders = n_classes;
     }
 
@@ -46,10 +44,10 @@ public class UtilitySubInitiator extends SubscriptionInitiator {
     }
 
     protected void handleAgree(ACLMessage agree){
-        System.out.println("Agent " + agree.getSender().getName() + " agreed.");
+        System.out.println( "Agent " + myAgent.getLocalName() +  " : "  + agree.getSender().getLocalName() + " agreed utility");
         try {
-            if( agree.getContentObject().getClass() == UtilityResponse.class){
-                ((Student)myAgent).storeUtility(agree.getSender(), ((UtilityResponse)agree.getContentObject()).utility);
+            if( agree.getContentObject().getClass() == UtilityMessage.class){
+                ((Student)myAgent).storeUtility(agree.getSender(), ((UtilityMessage)agree.getContentObject()).utility);
             }
         } catch (UnreadableException e) {
             e.printStackTrace();
@@ -57,10 +55,10 @@ public class UtilitySubInitiator extends SubscriptionInitiator {
     }
 
     protected void handleInform(ACLMessage inform) {
-        System.out.println("Agent "+inform.getSender().getName()+" successfully performed the requested action");
+        System.out.println( "Agent " + myAgent.getLocalName() +  " : "  + inform.getSender().getLocalName()+" sent utility");
         try {
-            if( inform.getContentObject().getClass() == UtilityResponse.class){
-                ((Student)myAgent).storeUtility(inform.getSender(), ((UtilityResponse)inform.getContentObject()).utility);
+            if( inform.getContentObject().getClass() == UtilityMessage.class){
+                ((Student)myAgent).storeUtility(inform.getSender(), ((UtilityMessage)inform.getContentObject()).utility);
             }
         } catch (UnreadableException e) {
             e.printStackTrace();
@@ -72,7 +70,13 @@ public class UtilitySubInitiator extends SubscriptionInitiator {
             // Some responder didn't reply within the specified timeout
             System.out.println("Timeout expired: missing "+(nResponders - responses.size())+" responses");
         } else {
-            System.out.println("ALL SUBSCIRPTIS DONE");
+            System.out.println("Agent " + myAgent.getLocalName() +  " : "  + " confirmed all subscriptions");
+
+            try {
+                Thread.sleep(new Random().nextInt(2500- 500) + 500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
             ((Student)myAgent).chooseClass();
         }

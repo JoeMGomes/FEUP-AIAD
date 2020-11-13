@@ -1,7 +1,6 @@
 package Behaviours;
 
 import Agents.CUClass;
-import Messages.UtilityResponse;
 import Utils.Parity;
 import jade.core.Agent;
 import jade.core.behaviours.*;

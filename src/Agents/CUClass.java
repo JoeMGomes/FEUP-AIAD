@@ -1,5 +1,6 @@
 package Agents;
 
+import Behaviours.AssignResponder;
 import Behaviours.CyclicSpitMessage;
 import Behaviours.UtilitySubResponder;
 import Utils.Parity;
@@ -43,7 +44,7 @@ public class CUClass extends Agent {
 
         subscriptionBehaviour = new UtilitySubResponder(this);
         addBehaviour(subscriptionBehaviour);
-        addBehaviour(new CyclicSpitMessage(this));
+        addBehaviour(new AssignResponder(this));
     }
 
     public void setFields() {

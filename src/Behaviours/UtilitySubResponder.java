@@ -1,7 +1,7 @@
 package Behaviours;
 
 import Agents.CUClass;
-import Messages.UtilityResponse;
+import Messages.UtilityMessage;
 import Utils.Parity;
 import jade.core.Agent;
 import jade.domain.FIPANames;
@@ -31,7 +31,7 @@ public class UtilitySubResponder extends SubscriptionResponder {
         //Always Agrees
         createSubscription(subscription_msg);
 
-        System.out.println("Agent "+ myAgent.getLocalName() +": Agree");
+        System.out.println("Agent "+ myAgent.getLocalName() +": Agrees " + subscription_msg.getSender().getLocalName() + " subscription");
         ACLMessage agree = subscription_msg.createReply();
         agree.setPerformative(ACLMessage.AGREE);
         setUtilityContent(subscription_msg, agree);
@@ -58,7 +58,7 @@ public class UtilitySubResponder extends SubscriptionResponder {
 
         try {
             p = (Parity) request.getContentObject();
-            response.setContentObject(new UtilityResponse(((CUClass) myAgent).getUtilityTotal(p)));
+            response.setContentObject(new UtilityMessage(((CUClass) myAgent).getUtilityTotal(p)));
 
         } catch (IOException | UnreadableException e) {
             e.printStackTrace();
