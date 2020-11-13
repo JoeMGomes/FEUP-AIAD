@@ -13,12 +13,15 @@ import java.io.IOException;
 import java.sql.SQLOutput;
 import java.util.HashMap;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 public class UtilitySubInitiator extends SubscriptionInitiator {
 
     private int nResponders;
+
     public UtilitySubInitiator(Agent a, int n_classes) {
         super(a, new ACLMessage(ACLMessage.SUBSCRIBE));
+        System.out.println("Subscribing");
         nResponders = n_classes;
     }
 
@@ -43,7 +46,14 @@ public class UtilitySubInitiator extends SubscriptionInitiator {
     }
 
     protected void handleAgree(ACLMessage agree){
-        System.out.println("Agent " +agree.getSender().getName() + " agreed.");
+        System.out.println("Agent " + agree.getSender().getName() + " agreed.");
+        try {
+            if( agree.getContentObject().getClass() == UtilityResponse.class){
+                ((Student)myAgent).storeUtility(agree.getSender(), ((UtilityResponse)agree.getContentObject()).utility);
+            }
+        } catch (UnreadableException e) {
+            e.printStackTrace();
+        }
     }
 
     protected void handleInform(ACLMessage inform) {
@@ -63,6 +73,8 @@ public class UtilitySubInitiator extends SubscriptionInitiator {
             System.out.println("Timeout expired: missing "+(nResponders - responses.size())+" responses");
         } else {
             System.out.println("ALL SUBSCIRPTIS DONE");
+
+            ((Student)myAgent).chooseClass();
         }
     }
 

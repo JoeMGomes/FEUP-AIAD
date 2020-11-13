@@ -26,8 +26,7 @@ public class UtilitySubResponder extends SubscriptionResponder {
 
     }
 
-    protected ACLMessage handleSubscription(ACLMessage
-                                                    subscription_msg) {
+    protected ACLMessage handleSubscription(ACLMessage subscription_msg) {
 
         //Always Agrees
         createSubscription(subscription_msg);
@@ -35,7 +34,7 @@ public class UtilitySubResponder extends SubscriptionResponder {
         System.out.println("Agent "+ myAgent.getLocalName() +": Agree");
         ACLMessage agree = subscription_msg.createReply();
         agree.setPerformative(ACLMessage.AGREE);
-        notify(null);
+        setUtilityContent(subscription_msg, agree);
         return agree;
     }
 
@@ -47,18 +46,22 @@ public class UtilitySubResponder extends SubscriptionResponder {
 
             inform = ((Subscription) subs.elementAt(i)).getMessage().createReply();
             inform.setPerformative((ACLMessage.INFORM));
-            Parity p = null;
-            try {
-
-                p = (Parity) ((Subscription) subs.elementAt(i)).getMessage().getContentObject();
-
-                inform.setContentObject(new UtilityResponse(((CUClass) myAgent).getUtilityTotal(p)));
-
-            } catch (IOException | UnreadableException e) {
-                e.printStackTrace();
-            }
+            ACLMessage request = ((Subscription) subs.elementAt(i)).getMessage();
+            setUtilityContent(request, inform);
 
             ((SubscriptionResponder.Subscription) subs.elementAt(i)).notify(inform);
+        }
+    }
+
+    public void setUtilityContent(ACLMessage request, ACLMessage response){
+        Parity p = null;
+
+        try {
+            p = (Parity) request.getContentObject();
+            response.setContentObject(new UtilityResponse(((CUClass) myAgent).getUtilityTotal(p)));
+
+        } catch (IOException | UnreadableException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -1,7 +1,6 @@
 package Agents;
 
-import Behaviours.UtilityResponder;
-import Behaviours.UtilitySubInitiator;
+import Behaviours.CyclicSpitMessage;
 import Behaviours.UtilitySubResponder;
 import Utils.Parity;
 import jade.core.Agent;
@@ -9,9 +8,6 @@ import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.*;
 import jade.domain.FIPAException;
-import jade.domain.FIPANames;
-import jade.lang.acl.ACLMessage;
-import jade.lang.acl.MessageTemplate;
 
 //CUClass - Curricular Unit Class
 public class CUClass extends Agent {
@@ -36,6 +32,7 @@ public class CUClass extends Agent {
     private int capacity;
 
     private UtilitySubResponder subscriptionBehaviour;
+
     protected void setup() {
         ServiceDescription sd = new ServiceDescription();
         sd.setType("Curricular Units");
@@ -44,15 +41,9 @@ public class CUClass extends Agent {
 
         setFields();
 
-        //addBehaviour(new CyclicSpitMessage(this));
-        //addBehaviour(new ClassHandler(this));
-
-        MessageTemplate template = MessageTemplate.and(
-                MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
-                MessageTemplate.MatchPerformative(ACLMessage.REQUEST) );
-
         subscriptionBehaviour = new UtilitySubResponder(this);
         addBehaviour(subscriptionBehaviour);
+        addBehaviour(new CyclicSpitMessage(this));
     }
 
     public void setFields() {
@@ -78,6 +69,34 @@ public class CUClass extends Agent {
 
     }
 
+    public float getUtilityCapacity() {
+        return capacity - occupiedSeats;
+    }
+
+    /**
+     * Total utility calculated from class statistics.
+     * Formula if Student is even: utilityCapacity / parityRatio.
+     * Formula if Student is odd:  utilityCapacity * parityRatio.
+     */
+    public Float getUtilityTotal(Parity p) {
+        if (p.equals(Parity.EVEN)) {
+            return getUtilityCapacity() / (evenStudents / occupiedSeats);
+        } else if (p.equals(Parity.ODD)) {
+            return getUtilityCapacity() * (evenStudents / occupiedSeats);
+        } else {
+            System.err.println("Invalid Parity. Assuming Even");
+            return getUtilityCapacity() / (evenStudents / occupiedSeats);
+        }
+    }
+
+    public void addStudent(Parity p) {
+        occupiedSeats++;
+        if (p.equals(Parity.EVEN)) {
+            evenStudents++;
+        }
+        subscriptionBehaviour.notify(null);
+    }
+
     /**
      * Registers service in DFAgent
      *
@@ -95,7 +114,6 @@ public class CUClass extends Agent {
         }
     }
 
-
     /**
      * Removes agent from DFAgent registration
      */
@@ -105,34 +123,4 @@ public class CUClass extends Agent {
         } catch (Exception e) {
         }
     }
-
-
-    public float getUtilityCapacity() {
-        return capacity - occupiedSeats;
-    }
-
-    /**
-     * Total utility calculated from class statistics.
-     * Formula if Student is even: utilityCapacity * parityRatio.
-     * Formula if Student is odd:  utilityCapacity / parityRatio.
-     */
-    public Float getUtilityTotal(Parity p) {
-        if (p.equals(Parity.EVEN)) {
-            return getUtilityCapacity() / (evenStudents / occupiedSeats);
-        } else if (p.equals(Parity.ODD)) {
-            return getUtilityCapacity() * (evenStudents / occupiedSeats);
-        } else {
-            System.err.println("Invalid Parity. Assuming Even");
-            return getUtilityCapacity() * (evenStudents / occupiedSeats);
-        }
-    }
-
-    public void addStudent(Parity p) {
-        occupiedSeats++;
-        if (p.equals(Parity.EVEN)) {
-            evenStudents++;
-        }
-        subscriptionBehaviour.notify(null);
-    }
-
 }

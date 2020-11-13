@@ -1,5 +1,8 @@
 package Behaviours;
 
+import Agents.CUClass;
+import Messages.UtilityResponse;
+import Utils.Parity;
 import jade.core.Agent;
 import jade.core.behaviours.*;
 import jade.lang.acl.*;
@@ -14,10 +17,15 @@ public class CyclicSpitMessage extends CyclicBehaviour {
     public void action(){
         ACLMessage msg = myAgent.receive();
         if(msg != null){
-            try {
-                System.out.println(myAgent.getLocalName() + " received: \n\t" + msg.getContentObject());
-            } catch (UnreadableException e) {
-                e.printStackTrace();
+            if (msg.getPerformative() == ACLMessage.PROPOSE) {
+                try {
+                    System.out.println(myAgent.getLocalName() + " received: \n\t" + msg.getContentObject());
+                    Parity p = (Parity) msg.getContentObject();
+                    ((CUClass) myAgent).addStudent(p);
+                } catch (UnreadableException e) {
+                    e.printStackTrace();
+                }
+
             }
         } else {
             block();
