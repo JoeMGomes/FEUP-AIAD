@@ -6,6 +6,10 @@ import jade.core.Agent;
 import jade.core.behaviours.*;
 import jade.lang.acl.*;
 
+/**
+ * CyclicBehaviour that prints the content of all messages received
+ * Debug only. Should not be used for anything serious
+ */
 public class CyclicSpitMessage extends CyclicBehaviour {
 
     //Just prints every message it receives in a semi-formated way

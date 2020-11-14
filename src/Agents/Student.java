@@ -29,17 +29,26 @@ public class Student extends Agent {
      * Value= Utility
      */
     private HashMap<AID, Float> classesUtility;
-
+    /**
+     * Reference to the subscription behaviour to allow calls to the cancel() function
+     */
     private UtilitySubInitiator utilitySubInitiator;
 
     protected void setup(){
         classesUtility = new HashMap<AID, Float>();
+        // Find all classes AID's
         getClasses();
 
         getParityArgs();
-        start();
+        // Add behaviour related to the subscription of each class utility
+        utilitySubInitiator = new UtilitySubInitiator(this,  classesUtility.size());
+        addBehaviour(utilitySubInitiator);
     }
 
+    /**
+     *  Finds all classes that published the service "Curricular Units"
+     *  in the DFAgent and adds them to the classesUtility Hashmap
+     */
     private void getClasses() {
         try{
             DFAgentDescription dfd = new DFAgentDescription();
@@ -56,6 +65,11 @@ public class Student extends Agent {
         } catch (FIPAException fe) { fe.printStackTrace(); }
     }
 
+    /**
+     * Reads and sets initialization arguments related to
+     * - Parity
+     * Sets parity to Even in case of problems
+     */
     private void getParityArgs(){
 
         Object[] args = getArguments();
@@ -81,23 +95,23 @@ public class Student extends Agent {
         }
     }
 
-    private void start(){
-        utilitySubInitiator = new UtilitySubInitiator(this,  classesUtility.size());
-        addBehaviour(utilitySubInitiator);
-    }
-
+    /**
+     * Stores utility information for class "a"
+     * @param a - AID of the class to be stored
+     * @param util - Util of class "a" to be stored
+     */
     public void storeUtility(AID a, Float util){
         if(a != null && util != null)
             classesUtility.put(a,util);
     }
 
+    /**
+     * Chooses the current class with max utility and initiates
+     * an AssignInitiator Behaviour
+     */
     public void chooseClass(){
 
-        try {
-            Thread.sleep(new Random().nextInt(1500- 500) + 500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
 
         AID bestClass = getBestClass();
 
@@ -114,12 +128,18 @@ public class Student extends Agent {
         addBehaviour(new AssignInitiator(this, request,1));
     }
 
+    /**
+     * @return Class AID for the best utility in classesUtility Hashmap
+     */
     private AID getBestClass(){
         AID aidClass = Collections.max(classesUtility.entrySet(), Comparator.comparing(Map.Entry::getValue)).getKey();
         System.out.println("Agent: " + this.getLocalName() +" best Class: " + aidClass.getLocalName() + " utility -> " + classesUtility.get(aidClass));
         return aidClass;
     }
 
+    /**
+     * Cancels utility subscription for all classes
+     */
     public void cancelSubscription(){
 
         for (HashMap.Entry<AID, Float> entry : getClassesUtility().entrySet()) {
@@ -127,15 +147,25 @@ public class Student extends Agent {
         }
     }
 
+    /**
+     * Getter for classesUtility
+     * @return classesUtility Hashmap
+     */
     public HashMap<AID, Float> getClassesUtility() {
         return classesUtility;
     }
 
+    /**
+     * Getter for student parity
+     * @return
+     */
     public Parity getParity() {
         return parity;
     }
 
-
+    /**
+     * Prints to which class the student was assigned before terminating
+     */
     protected void takeDown() {
         System.out.println("Student " + getLocalName() + " (" +  parity +") sent to class " + getBestClass().getLocalName());
     }

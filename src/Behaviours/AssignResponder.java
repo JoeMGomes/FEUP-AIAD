@@ -20,6 +20,11 @@ public class AssignResponder extends AchieveREResponder {
                 MessageTemplate.MatchPerformative(ACLMessage.REQUEST)));
     }
 
+    /**
+     * If received Utility does not match actual utility or the received
+     * object is not of type AssignMessage a refuse exception is thrown.
+     * Else sends agree message.
+     */
     protected ACLMessage handleRequest(ACLMessage request) throws  RefuseException {
         try {
             System.out.println("Agent " + myAgent.getLocalName() + ": ASSIGN received from " + request.getSender().getLocalName());
@@ -46,6 +51,10 @@ public class AssignResponder extends AchieveREResponder {
         }
     }
 
+
+    /**
+     * Adds the student to the class and sends an inform message
+     */
     protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException {
         ACLMessage inform = request.createReply();
 

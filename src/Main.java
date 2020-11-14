@@ -37,14 +37,11 @@ public class Main {
             ac = cc.createNewAgent("uc3", "Agents.CUClass", uc3Args);
             ac.start();
 
-
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-
 
             ac = cc.createNewAgent("1", "Agents.Student", oddStudent);
             ac.start();

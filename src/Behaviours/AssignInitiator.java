@@ -18,6 +18,7 @@ public class AssignInitiator extends AchieveREInitiator {
     }
 
     protected void handleAgree(ACLMessage agree){
+        //Simply informative print
         System.out.println("Agent " + myAgent.getLocalName() +  " : "  +agree.getSender().getLocalName() + " agreed to add");
     }
 
@@ -27,6 +28,11 @@ public class AssignInitiator extends AchieveREInitiator {
         //Cancel utility subscription
         ((Student)myAgent).cancelSubscription();
     }
+
+    /**
+     * When the utility that a student believes a class has and the actua lutility dont match the assign request is refused.
+     * The student than waits a moment and retries with hopefully updated utilities
+     */
     protected void handleRefuse(ACLMessage refuse) {
         System.out.println("Agent " + myAgent.getLocalName() +  " : "  + refuse.getSender().getLocalName()+" said invalid utility");
         nResponders--;

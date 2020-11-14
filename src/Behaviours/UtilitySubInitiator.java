@@ -72,6 +72,9 @@ public class UtilitySubInitiator extends SubscriptionInitiator {
         } else {
             System.out.println("Agent " + myAgent.getLocalName() +  " : "  + " confirmed all subscriptions");
 
+
+            //Sleep to ensure it receives a utility subscription update
+            //Sleep between 0.5 and 2.5seconds
             try {
                 Thread.sleep(new Random().nextInt(2500- 500) + 500);
             } catch (InterruptedException e) {
