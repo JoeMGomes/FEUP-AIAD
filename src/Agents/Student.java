@@ -2,6 +2,7 @@ package Agents;
 
 import Behaviours.AssignInitiator;
 import Behaviours.UtilitySubInitiator;
+import Messages.AssignMessage;
 import Messages.ParityMessage;
 import Utils.Parity;
 import jade.core.AID;
@@ -103,7 +104,7 @@ public class Student extends Agent {
         ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
         request.addReceiver(bestClass);
         try {
-            request.setContentObject(new ParityMessage(parity));
+            request.setContentObject(new AssignMessage(parity, classesUtility.get(bestClass) ));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -115,7 +116,7 @@ public class Student extends Agent {
 
     private AID getBestClass(){
         AID aidClass = Collections.max(classesUtility.entrySet(), Comparator.comparing(Map.Entry::getValue)).getKey();
-        System.out.println("Agent: " + this.getLocalName() +" best Class: " + aidClass.getLocalName());
+        System.out.println("Agent: " + this.getLocalName() +" best Class: " + aidClass.getLocalName() + " utility -> " + classesUtility.get(aidClass));
         return aidClass;
     }
 
@@ -133,4 +134,10 @@ public class Student extends Agent {
     public Parity getParity() {
         return parity;
     }
+
+
+    protected void takeDown() {
+        System.out.println("Student " + getLocalName() + " (" +  parity +") sent to class " + getBestClass().getLocalName());
+    }
+
 }

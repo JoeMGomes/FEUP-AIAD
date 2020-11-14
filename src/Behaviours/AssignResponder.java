@@ -1,20 +1,17 @@
 package Behaviours;
 
 import Agents.CUClass;
+import Messages.AssignMessage;
 import Messages.ParityMessage;
-import Messages.UtilityMessage;
 import Utils.Parity;
 import jade.core.Agent;
 import jade.domain.FIPAAgentManagement.FailureException;
-import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.proto.AchieveREResponder;
-
-import java.io.IOException;
 
 public class AssignResponder extends AchieveREResponder {
     public AssignResponder(Agent a) {
@@ -27,18 +24,24 @@ public class AssignResponder extends AchieveREResponder {
         try {
             System.out.println("Agent " + myAgent.getLocalName() + ": ASSIGN received from " + request.getSender().getLocalName());
 
-            if (request.getContentObject().getClass() == ParityMessage.class) {
+            Object message = request.getContentObject();
+            if ( message.getClass() == AssignMessage.class) {
 
-                ACLMessage agree = request.createReply();
-                agree.setPerformative(ACLMessage.AGREE);
-                return agree;
+                // Agree
+                if(((AssignMessage)message).utility.equals(((CUClass)myAgent).getUtilityTotal( ((AssignMessage)message).parity))) {
+                    ACLMessage agree = request.createReply();
+                    agree.setPerformative(ACLMessage.AGREE);
+                    return agree;
+                } else {
+                    throw new RefuseException("invalid-utility");
+                }
             } else {
                 // We refuse to perform the action
                 throw new RefuseException("check-failed");
             }
         } catch (UnreadableException e) {
             e.printStackTrace();
-            System.out.println("Agent " + myAgent.getLocalName() + ": Refuse");
+            System.out.println("Agent " + myAgent.getLocalName() + ": Refused assign");
             throw new RefuseException("check-failed");
         }
     }
@@ -47,7 +50,7 @@ public class AssignResponder extends AchieveREResponder {
         ACLMessage inform = request.createReply();
 
         try {
-            Parity studentParity = ((ParityMessage) request.getContentObject()).parity;
+            Parity studentParity = ((AssignMessage) request.getContentObject()).parity;
 
             //Add Student to class
             ((CUClass) myAgent).addStudent(studentParity);

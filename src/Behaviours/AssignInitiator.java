@@ -1,12 +1,11 @@
 package Behaviours;
 
 import Agents.Student;
-import Messages.UtilityMessage;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
-import jade.lang.acl.UnreadableException;
 import jade.proto.AchieveREInitiator;
 
+import java.util.Random;
 import java.util.Vector;
 
 public class AssignInitiator extends AchieveREInitiator {
@@ -29,8 +28,17 @@ public class AssignInitiator extends AchieveREInitiator {
         ((Student)myAgent).cancelSubscription();
     }
     protected void handleRefuse(ACLMessage refuse) {
-        System.out.println("Agent " + myAgent.getLocalName() +  " : "  + refuse.getSender().getLocalName()+" refused to perform the requested action");
+        System.out.println("Agent " + myAgent.getLocalName() +  " : "  + refuse.getSender().getLocalName()+" said invalid utility");
         nResponders--;
+
+        //wait for subscription update
+        try {
+            Thread.sleep(new Random().nextInt(2500 - 1000) + 1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ((Student)myAgent).chooseClass();
     }
     protected void handleFailure(ACLMessage failure) {
         if (failure.getSender().equals(myAgent.getAMS())) {

@@ -1,7 +1,6 @@
 package Agents;
 
 import Behaviours.AssignResponder;
-import Behaviours.CyclicSpitMessage;
 import Behaviours.UtilitySubResponder;
 import Utils.Parity;
 import jade.core.Agent;
@@ -39,7 +38,7 @@ public class CUClass extends Agent {
         sd.setType("Curricular Units");
         sd.setName(getLocalName());
         register(sd);
-
+        
         setFields();
 
         subscriptionBehaviour = new UtilitySubResponder(this);

@@ -55,7 +55,7 @@ public class UtilitySubInitiator extends SubscriptionInitiator {
     }
 
     protected void handleInform(ACLMessage inform) {
-        System.out.println( "Agent " + myAgent.getLocalName() +  " : "  + inform.getSender().getLocalName()+" sent utility");
+        System.out.println( "Agent " + myAgent.getLocalName() +  " : "  + inform.getSender().getLocalName()+" updated utility");
         try {
             if( inform.getContentObject().getClass() == UtilityMessage.class){
                 ((Student)myAgent).storeUtility(inform.getSender(), ((UtilityMessage)inform.getContentObject()).utility);
