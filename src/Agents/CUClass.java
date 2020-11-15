@@ -12,12 +12,6 @@ import jade.domain.FIPAException;
 //CUClass - Curricular Unit Class
 public class CUClass extends Agent {
 
-    //TODO com varias UC's:Cada turma só pode ter uma CUClass para cada scheduleID
-    /**
-     * Global scheduleID that identifies the class schedule
-     */
-    private int scheduleID;
-
     /**
      * Number of even numbered students
      */

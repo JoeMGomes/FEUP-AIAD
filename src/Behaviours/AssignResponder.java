@@ -2,7 +2,6 @@ package Behaviours;
 
 import Agents.CUClass;
 import Messages.AssignMessage;
-import Messages.ParityMessage;
 import Utils.Parity;
 import jade.core.Agent;
 import jade.domain.FIPAAgentManagement.FailureException;

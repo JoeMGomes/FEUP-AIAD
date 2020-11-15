@@ -3,7 +3,6 @@ package Agents;
 import Behaviours.AssignInitiator;
 import Behaviours.UtilitySubInitiator;
 import Messages.AssignMessage;
-import Messages.ParityMessage;
 import Utils.Parity;
 import jade.core.AID;
 import jade.core.Agent;
