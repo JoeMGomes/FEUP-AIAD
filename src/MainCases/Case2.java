@@ -25,15 +25,14 @@ public class Case2 {
             oddStudent[0] = "odd";
 
             Object[] uc1Args = new Object[1];
-            uc1Args[0] = "30 10 5";
+            uc1Args[0] = "30 10 1";
             ac = cc.createNewAgent("uc1", "Agents.CUClass", uc1Args);
             ac.start();
 
             Object[] uc2Args = new Object[1];
-            uc2Args[0] = "30 10 5";
+            uc2Args[0] = "30 10 9";
             ac = cc.createNewAgent("uc2", "Agents.CUClass", uc2Args);
             ac.start();
-
 
             try {
                 Thread.sleep(1000);
@@ -43,7 +42,7 @@ public class Case2 {
 
 
 
-            ac = cc.createNewAgent("1", "Agents.Student", evenStudent);
+            ac = cc.createNewAgent("1", "Agents.Student", oddStudent);
             ac.start();
 
             ac = cc.createNewAgent("2", "Agents.Student", evenStudent);

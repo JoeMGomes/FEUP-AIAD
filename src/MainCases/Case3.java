@@ -25,17 +25,17 @@ public class Case3 {
             oddStudent[0] = "odd";
 
             Object[] uc1Args = new Object[1];
-            uc1Args[0] = "30 10 1";
+            uc1Args[0] = "30 6 3";
             ac = cc.createNewAgent("uc1", "Agents.CUClass", uc1Args);
             ac.start();
 
             Object[] uc2Args = new Object[1];
-            uc2Args[0] = "30 10 9";
+            uc2Args[0] = "30 20 10";
             ac = cc.createNewAgent("uc2", "Agents.CUClass", uc2Args);
             ac.start();
 
             Object[] uc3Args = new Object[1];
-            uc3Args[0] = "30 10 5";
+            uc3Args[0] = "30 30 15";
             ac = cc.createNewAgent("uc3", "Agents.CUClass", uc3Args);
             ac.start();
 
@@ -45,8 +45,6 @@ public class Case3 {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-
 
             ac = cc.createNewAgent("1", "Agents.Student", oddStudent);
             ac.start();

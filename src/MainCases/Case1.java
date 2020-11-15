@@ -25,14 +25,15 @@ public class Case1 {
             oddStudent[0] = "odd";
 
             Object[] uc1Args = new Object[1];
-            uc1Args[0] = "30 10 1";
+            uc1Args[0] = "30 10 5";
             ac = cc.createNewAgent("uc1", "Agents.CUClass", uc1Args);
             ac.start();
 
             Object[] uc2Args = new Object[1];
-            uc2Args[0] = "30 10 9";
+            uc2Args[0] = "30 10 5";
             ac = cc.createNewAgent("uc2", "Agents.CUClass", uc2Args);
             ac.start();
+
 
             try {
                 Thread.sleep(1000);
@@ -42,19 +43,19 @@ public class Case1 {
 
 
 
-            ac = cc.createNewAgent("1", "Agents.Student", oddStudent);
+            ac = cc.createNewAgent("Student1", "Agents.Student", evenStudent);
             ac.start();
 
-            ac = cc.createNewAgent("2", "Agents.Student", evenStudent);
+            ac = cc.createNewAgent("Student2", "Agents.Student", evenStudent);
             ac.start();
 
-            ac = cc.createNewAgent("3", "Agents.Student", evenStudent);
+            ac = cc.createNewAgent("Student3", "Agents.Student", evenStudent);
             ac.start();
 
-            ac = cc.createNewAgent("4", "Agents.Student", evenStudent);
+            ac = cc.createNewAgent("Student4", "Agents.Student", evenStudent);
             ac.start();
 
-            ac = cc.createNewAgent("5", "Agents.Student", evenStudent);
+            ac = cc.createNewAgent("Student5", "Agents.Student", evenStudent);
             ac.start();
 
         } catch (StaleProxyException e) {
