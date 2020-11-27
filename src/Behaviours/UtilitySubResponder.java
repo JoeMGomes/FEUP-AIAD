@@ -3,12 +3,12 @@ package Behaviours;
 import Agents.CUClass;
 import Messages.UtilityMessage;
 import Utils.Parity;
-import jade.core.Agent;
+import sajas.core.Agent;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import jade.proto.SubscriptionResponder;
+import sajas.proto.SubscriptionResponder;
 
 import java.io.IOException;
 import java.util.Vector;

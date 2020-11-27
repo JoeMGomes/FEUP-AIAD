@@ -3,14 +3,14 @@ package Behaviours;
 import Agents.CUClass;
 import Messages.AssignMessage;
 import Utils.Parity;
-import jade.core.Agent;
+import sajas.core.Agent;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import jade.proto.AchieveREResponder;
+import sajas.proto.AchieveREResponder;
 
 public class AssignResponder extends AchieveREResponder {
     public AssignResponder(Agent a) {

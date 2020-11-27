@@ -2,16 +2,25 @@ package MainCases;
 
 import jade.core.Profile;
 import jade.core.ProfileImpl;
-import jade.core.Runtime;
-import jade.wrapper.AgentController;
-import jade.wrapper.ContainerController;
+import sajas.core.Runtime;
+import sajas.sim.repast3.Repast3Launcher;
+import sajas.wrapper.AgentController;
+import sajas.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
+import uchicago.src.sim.engine.SimInit;
 
-public class Case1 {
+public class Case1 extends Repast3Launcher {
     public static void main(String[] args) {
+        SimInit init = new SimInit();
+        init.setNumRuns(1);   // works only in batch mode
+        init.loadModel(new Case1(), null, true);
+    }
+
+    @Override
+    protected void launchJADE() {
         Runtime rt = Runtime.instance();
         Profile p = new ProfileImpl();
-        p.setParameter(Profile.GUI, "true");
+        //p.setParameter(Profile.GUI, "true");
 
         ContainerController cc = rt.createMainContainer(p);
         AgentController ac;
@@ -61,5 +70,15 @@ public class Case1 {
         } catch (StaleProxyException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String[] getInitParam() {
+        return new String[0];
+    }
+
+    @Override
+    public String getName() {
+        return "Case 1";
     }
 }

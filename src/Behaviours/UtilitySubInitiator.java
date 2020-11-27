@@ -3,11 +3,11 @@ package Behaviours;
 import Agents.Student;
 import Messages.UtilityMessage;
 import jade.core.AID;
-import jade.core.Agent;
+import sajas.core.Agent;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
-import jade.proto.SubscriptionInitiator;
+import sajas.proto.SubscriptionInitiator;
 
 import java.io.IOException;
 import java.util.HashMap;

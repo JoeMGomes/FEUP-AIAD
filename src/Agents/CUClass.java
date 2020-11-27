@@ -3,9 +3,9 @@ package Agents;
 import Behaviours.AssignResponder;
 import Behaviours.UtilitySubResponder;
 import Utils.Parity;
-import jade.core.Agent;
+import sajas.core.Agent;
 
-import jade.domain.DFService;
+import sajas.domain.DFService;
 import jade.domain.FIPAAgentManagement.*;
 import jade.domain.FIPAException;
 

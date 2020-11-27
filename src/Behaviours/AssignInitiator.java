@@ -1,9 +1,9 @@
 package Behaviours;
 
 import Agents.Student;
-import jade.core.Agent;
+import sajas.core.Agent;
 import jade.lang.acl.ACLMessage;
-import jade.proto.AchieveREInitiator;
+import sajas.proto.AchieveREInitiator;
 
 import java.util.Random;
 import java.util.Vector;
