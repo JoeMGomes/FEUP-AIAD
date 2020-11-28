@@ -23,14 +23,14 @@ public class AssignInitiator extends AchieveREInitiator {
     }
 
     protected void handleInform(ACLMessage inform) {
-        System.out.println("Agent " + myAgent.getLocalName() +  " : " +inform.getSender().getLocalName()+" added this student");
+        System.out.println("Agent " + myAgent.getLocalName() +  " : " +inform.getSender().getLocalName()+" added this student ----------------------");
 
         //Cancel utility subscription
         ((Student)myAgent).cancelSubscription();
     }
 
     /**
-     * When the utility that a student believes a class has and the actua lutility dont match the assign request is refused.
+     * When the utility that a student believes a class has and the actual utility do not match the assign request is refused.
      * The student than waits a moment and retries with hopefully updated utilities
      */
     protected void handleRefuse(ACLMessage refuse) {
@@ -38,11 +38,11 @@ public class AssignInitiator extends AchieveREInitiator {
         nResponders--;
 
         //wait for subscription update
-        try {
+        /* try {
             Thread.sleep(new Random().nextInt(2500 - 1000) + 1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        } */
 
         ((Student)myAgent).chooseClass();
     }
