@@ -7,9 +7,11 @@ import sajas.core.Agent;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
+import sajas.core.behaviours.WakerBehaviour;
 import sajas.proto.SubscriptionInitiator;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Vector;
@@ -40,14 +42,15 @@ public class UtilitySubInitiator extends SubscriptionInitiator {
         }
         Vector<ACLMessage> v = new Vector<ACLMessage>();
         v.addElement(subscription);
+//        System.out.println("\n\nNEW STUDENT=" + myAgent.getLocalName() + "\n");
         return v;
     }
 
-    protected void handleAgree(ACLMessage agree){
-        System.out.println( "Agent " + myAgent.getLocalName() +  " : "  + agree.getSender().getLocalName() + " agreed utility");
+    protected void handleAgree(ACLMessage agree) {
+        System.out.println("Agent " + myAgent.getLocalName() + " : " + agree.getSender().getLocalName() + " agreed utility");
         try {
-            if( agree.getContentObject().getClass() == UtilityMessage.class){
-                ((Student)myAgent).storeUtility(agree.getSender(), ((UtilityMessage)agree.getContentObject()).utility);
+            if (agree.getContentObject().getClass() == UtilityMessage.class) {
+                ((Student) myAgent).storeUtility(agree.getSender(), ((UtilityMessage) agree.getContentObject()).utility);
             }
         } catch (UnreadableException e) {
             e.printStackTrace();
@@ -55,10 +58,10 @@ public class UtilitySubInitiator extends SubscriptionInitiator {
     }
 
     protected void handleInform(ACLMessage inform) {
-        System.out.println( "Agent " + myAgent.getLocalName() +  " : "  + inform.getSender().getLocalName()+" updated utility");
+        System.out.println("Agent " + myAgent.getLocalName() + " : " + inform.getSender().getLocalName() + " updated utility");
         try {
-            if( inform.getContentObject().getClass() == UtilityMessage.class){
-                ((Student)myAgent).storeUtility(inform.getSender(), ((UtilityMessage)inform.getContentObject()).utility);
+            if (inform.getContentObject().getClass() == UtilityMessage.class) {
+                ((Student) myAgent).storeUtility(inform.getSender(), ((UtilityMessage) inform.getContentObject()).utility);
             }
         } catch (UnreadableException e) {
             e.printStackTrace();
@@ -68,9 +71,9 @@ public class UtilitySubInitiator extends SubscriptionInitiator {
     protected void handleAllResponses(Vector responses) {
         if (responses.size() < nResponders) {
             // Some responder didn't reply within the specified timeout
-            System.out.println("Timeout expired: missing "+(nResponders - responses.size())+" responses");
+            System.out.println("Timeout expired: missing " + (nResponders - responses.size()) + " responses");
         } else {
-            System.out.println("Agent " + myAgent.getLocalName() +  " : "  + " confirmed all subscriptions");
+            System.out.println("Agent " + myAgent.getLocalName() + " : " + " confirmed all subscriptions");
 
 
             //Sleep to ensure it receives a utility subscription update
@@ -80,7 +83,7 @@ public class UtilitySubInitiator extends SubscriptionInitiator {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }*/
-            ((Student)myAgent).chooseClass();
+            ((Student) myAgent).chooseClass();
         }
     }
 

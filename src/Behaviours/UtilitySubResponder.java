@@ -27,7 +27,7 @@ public class UtilitySubResponder extends SubscriptionResponder {
     }
 
     protected ACLMessage handleSubscription(ACLMessage subscription_msg) {
-
+//        System.out.println("\n\nSUBS STUDENT=" + subscription_msg.getSender().getLocalName()+ "\n\n");
         //Always Agrees
         createSubscription(subscription_msg);
 

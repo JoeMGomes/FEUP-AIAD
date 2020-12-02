@@ -1,5 +1,8 @@
 package MainCases;
 
+import Agents.CUClass;
+import Agents.Student;
+import Utils.Parity;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import sajas.core.Runtime;
@@ -20,51 +23,50 @@ public class Case1 extends Repast3Launcher {
     protected void launchJADE() {
         Runtime rt = Runtime.instance();
         Profile p = new ProfileImpl();
-        //p.setParameter(Profile.GUI, "true");
 
         ContainerController cc = rt.createMainContainer(p);
         AgentController ac;
 
         try {
+            // Object[] evenStudent = new Object[1];
+            // evenStudent[0] = "even";
 
-            Object[] evenStudent = new Object[1];
-            evenStudent[0] = "even";
+            //Object[] oddStudent = new Object[1];
+            //oddStudent[0] = "odd";
 
-            Object[] oddStudent = new Object[1];
-            oddStudent[0] = "odd";
-
-            Object[] uc1Args = new Object[1];
-            uc1Args[0] = "30 10 5";
-            ac = cc.createNewAgent("uc1", "Agents.CUClass", uc1Args);
+            CUClass cuClass1 = new CUClass(30, 10, 5);
+            ac = cc.acceptNewAgent("uc1", cuClass1);
             ac.start();
 
-            Object[] uc2Args = new Object[1];
-            uc2Args[0] = "30 10 5";
-            ac = cc.createNewAgent("uc2", "Agents.CUClass", uc2Args);
+            CUClass cuClass2 = new CUClass(30, 10, 5);
+            ac = cc.acceptNewAgent("uc2", cuClass2);
             ac.start();
 
-
-  /*          try {
-                Thread.sleep(1000);
+            try {
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-*/
 
 
-            ac = cc.createNewAgent("Student1", "Agents.Student", evenStudent);
+            Student std1 = new Student(Parity.EVEN);
+            ac = cc.acceptNewAgent("Student1", std1);
             ac.start();
 
-            ac = cc.createNewAgent("Student2", "Agents.Student", evenStudent);
+            Student std2 = new Student(Parity.EVEN);
+            ac = cc.acceptNewAgent("Student2", std2);
             ac.start();
 
-            ac = cc.createNewAgent("Student3", "Agents.Student", evenStudent);
+            Student std3 = new Student(Parity.EVEN);
+            ac = cc.acceptNewAgent("Student3", std3);
             ac.start();
 
-            ac = cc.createNewAgent("Student4", "Agents.Student", evenStudent);
+            Student std4 = new Student(Parity.EVEN);
+            ac = cc.acceptNewAgent("Student4", std4);
             ac.start();
 
-            ac = cc.createNewAgent("Student5", "Agents.Student", evenStudent);
+            Student std5 = new Student(Parity.EVEN);
+            ac = cc.acceptNewAgent("Student5", std5);
             ac.start();
 
         } catch (StaleProxyException e) {

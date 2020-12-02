@@ -1,6 +1,7 @@
 package Agents;
 
 import Behaviours.AssignInitiator;
+import Behaviours.StudentSubWaker;
 import Behaviours.UtilitySubInitiator;
 import Messages.AssignMessage;
 import Utils.Parity;
@@ -28,27 +29,35 @@ public class Student extends Agent {
      * Value= Utility
      */
     private HashMap<AID, Float> classesUtility;
+
+    public void setUtilitySubInitiator(UtilitySubInitiator utilitySubInitiator) {
+        this.utilitySubInitiator = utilitySubInitiator;
+    }
+
     /**
      * Reference to the subscription behaviour to allow calls to the cancel() function
      */
     private UtilitySubInitiator utilitySubInitiator;
 
+    public Student(Parity parity) {
+        this.parity = parity;
+    }
+
     protected void setup(){
         classesUtility = new HashMap<AID, Float>();
         // Find all classes AID's
-        getClasses();
+        // getClasses();
 
-        getParityArgs();
+        //getParityArgs();
         // Add behaviour related to the subscription of each class utility
-        utilitySubInitiator = new UtilitySubInitiator(this,  classesUtility.size());
-        addBehaviour(utilitySubInitiator);
+        addBehaviour(new StudentSubWaker(this,2000 ));
     }
 
     /**
      *  Finds all classes that published the service "Curricular Units"
      *  in the DFAgent and adds them to the classesUtility Hashmap
      */
-    private void getClasses() {
+    public void getClasses() {
         try{
             DFAgentDescription dfd = new DFAgentDescription();
             ServiceDescription sd = new ServiceDescription();
@@ -109,9 +118,6 @@ public class Student extends Agent {
      * an AssignInitiator Behaviour
      */
     public void chooseClass(){
-
-
-
         AID bestClass = getBestClass();
 
         ACLMessage request = new ACLMessage(ACLMessage.REQUEST);

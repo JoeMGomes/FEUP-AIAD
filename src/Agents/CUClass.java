@@ -30,6 +30,13 @@ public class CUClass extends Agent {
      */
     private UtilitySubResponder subscriptionBehaviour;
 
+    public CUClass(int capacity, int occupiedSeats, int evenStudents) {
+        this.capacity = capacity;
+        this.occupiedSeats = occupiedSeats;
+        this.evenStudents = evenStudents;
+    }
+
+    @Override
     protected void setup() {
         // Register service in DF Agent
         ServiceDescription sd = new ServiceDescription();
@@ -38,7 +45,7 @@ public class CUClass extends Agent {
         register(sd);
 
         // Read initialization arguments
-        setFields();
+        //setFields();
 
         // Start utility subscription behaviour
         subscriptionBehaviour = new UtilitySubResponder(this);
