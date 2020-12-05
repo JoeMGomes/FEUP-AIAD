@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main extends Repast3Launcher {
-    private static final boolean BATCH_MODE = false;
+    private static final boolean BATCH_MODE = true;
 
     int numberOfStudents = 5;
     int numberOfClasses = 2;
@@ -38,10 +38,19 @@ public class Main extends Repast3Launcher {
 
         // create a simulation
         SimInit init = new SimInit();
-        init.setNumRuns(1);   // works only in batch mode
+        init.setNumRuns(2);   // works only in batch mode
 
         // load model into simulation
         init.loadModel(new Main(), null, runMode);
+
+    }
+
+    public boolean allAllocated(){
+        for(Student s : students){
+            if(!s.isAllocated())
+                return  false;
+        }
+        return true;
     }
 
     @Override
@@ -81,7 +90,7 @@ public class Main extends Repast3Launcher {
     @Override
     public void begin() {
         super.begin();
-        buildAndScheduleDisplay();
+        //buildAndScheduleDisplay();
     }
 
     public void buildAndScheduleDisplay() {

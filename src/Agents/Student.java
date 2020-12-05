@@ -30,6 +30,8 @@ public class Student extends Agent {
      */
     private HashMap<AID, Float> classesUtility;
 
+    private boolean isAllocated;
+
     public void setUtilitySubInitiator(UtilitySubInitiator utilitySubInitiator) {
         this.utilitySubInitiator = utilitySubInitiator;
     }
@@ -41,6 +43,7 @@ public class Student extends Agent {
 
     public Student(Parity parity) {
         this.parity = parity;
+        this.isAllocated = false;
     }
 
     protected void setup(){
@@ -175,4 +178,11 @@ public class Student extends Agent {
         System.out.println("Student " + getLocalName() + " (" +  parity +") sent to class " + getBestClass().getLocalName());
     }
 
+    public boolean isAllocated() {
+        return isAllocated;
+    }
+
+    public void setAllocated(boolean allocated) {
+        isAllocated = allocated;
+    }
 }

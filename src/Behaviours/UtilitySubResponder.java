@@ -3,6 +3,15 @@ package Behaviours;
 import Agents.CUClass;
 import Messages.UtilityMessage;
 import Utils.Parity;
+import jade.content.lang.Codec;
+import jade.content.lang.sl.SLCodec;
+import jade.content.onto.Ontology;
+import jade.content.onto.basic.Action;
+import jade.core.AID;
+import jade.domain.FIPAAgentManagement.FailureException;
+import jade.domain.JADEAgentManagement.JADEManagementOntology;
+import jade.domain.JADEAgentManagement.ShutdownPlatform;
+import jade.wrapper.ControllerException;
 import sajas.core.Agent;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
@@ -12,6 +21,11 @@ import sajas.proto.SubscriptionResponder;
 
 import java.io.IOException;
 import java.util.Vector;
+
+import sajas.core.Runtime;
+
+import static sajas.domain.AMSService.amsAID;
+import static sajas.domain.AMSService.send;
 
 public class UtilitySubResponder extends SubscriptionResponder {
 
@@ -63,6 +77,25 @@ public class UtilitySubResponder extends SubscriptionResponder {
         } catch (IOException | UnreadableException e) {
             e.printStackTrace();
         }
+    }
+
+    protected ACLMessage handleCancel(ACLMessage cancel)
+            throws FailureException {
+        super.handleCancel(cancel);
+
+        if(getSubscriptions().size() == 0){
+            System.out.println("HORA DE SAIR JOVENS");
+
+            try {
+                myAgent.getContainerController().getPlatformController().kill();
+            } catch (ControllerException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+        return null;
     }
 }
 

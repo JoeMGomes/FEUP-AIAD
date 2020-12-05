@@ -20,6 +20,8 @@ public class AssignInitiator extends AchieveREInitiator {
     protected void handleAgree(ACLMessage agree){
         //Simply informative print
         System.out.println("Agent " + myAgent.getLocalName() +  " : "  +agree.getSender().getLocalName() + " agreed to add");
+
+
     }
 
     protected void handleInform(ACLMessage inform) {
@@ -27,6 +29,7 @@ public class AssignInitiator extends AchieveREInitiator {
 
         //Cancel utility subscription
         ((Student)myAgent).cancelSubscription();
+        ((Student) myAgent).setAllocated(true);
     }
 
     /**
