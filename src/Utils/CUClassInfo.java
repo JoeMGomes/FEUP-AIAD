@@ -7,15 +7,15 @@ public class CUClassInfo implements Serializable {
     /**
      * Number of even numbered students
      */
-    private float evenStudents;
+    public float evenStudents;
     /**
      * Current number of students in the CUClass
      */
-    private int occupiedSeats;
+    public int occupiedSeats;
     /**
      * Maximum capacity of the CUClass allocated room
      */
-    private int capacity;
+    public int capacity;
 
     public CUClassInfo(float e,int o, int c){
         evenStudents = e;

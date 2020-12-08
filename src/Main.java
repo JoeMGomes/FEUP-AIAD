@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main extends Repast3Launcher {
-    private static final boolean BATCH_MODE = true;
+    private static final boolean BATCH_MODE = false;
 
     int numberOfStudents = 5;
     int numberOfClasses = 2;
@@ -64,29 +64,46 @@ public class Main extends Repast3Launcher {
         launchAgents(mainContainer);
     }
 
+    private void addEvenStudent(ContainerController mainContainer, int i) throws StaleProxyException {
+        Student studentAgent = new Student(Parity.EVEN);
+        AgentController student = mainContainer.acceptNewAgent("Student" + i, studentAgent);
+        student.start();
+        students.add(studentAgent);
+    }
+
+    private void addOddStudent(ContainerController mainContainer, int i) throws StaleProxyException {
+        Student studentAgent = new Student(Parity.ODD);
+        AgentController student = mainContainer.acceptNewAgent("Student" + i, studentAgent);
+        student.start();
+        students.add(studentAgent);
+    }
+
+    private void addClass(int capacity, int occupied, int even, ContainerController mainContainer, int i) throws StaleProxyException {
+        CUClass cuClassAgent = new CUClass(capacity, occupied, even);
+        AgentController cuClass = mainContainer.acceptNewAgent("uc" + i, cuClassAgent);
+        cuClass.start();
+        classes.add(cuClassAgent);
+    }
+
     private void launchAgents(ContainerController mainContainer){
         students = new ArrayList<Student>();
         classes = new ArrayList<CUClass>();
 
         try {
-            for (int i = 0; i < numberOfClasses; i++) {
-                CUClass cuClassAgent = new CUClass(30, 10, 5);
-                AgentController cuClass = mainContainer.acceptNewAgent("uc" + i, cuClassAgent);
-                cuClass.start();
-                classes.add(cuClassAgent);
-            }
+
+            addClass(30, 5, 1, mainContainer, 1);
+            addClass(30, 10, 9, mainContainer, 2);
 
             dataRecorderAgent = new DataRecorderAgent(classes);
             AgentController dataController = mainContainer.acceptNewAgent("dataRecorder" , dataRecorderAgent);
             dataController.start();
 
-            for (int i = 0; i < numberOfStudents; i++) {
-                Student studentAgent = new Student(Parity.EVEN);
-                AgentController student = mainContainer.acceptNewAgent("Student" + i, studentAgent);
-                student.start();
-                students.add(studentAgent);
-            }
-
+            addEvenStudent(mainContainer, 1);
+            addEvenStudent(mainContainer, 2);
+            addEvenStudent(mainContainer, 3);
+            addEvenStudent(mainContainer, 4);
+            addOddStudent(mainContainer, 5);
+            addOddStudent(mainContainer, 6);
 
         } catch (StaleProxyException e) {
             e.printStackTrace();
@@ -97,7 +114,7 @@ public class Main extends Repast3Launcher {
     @Override
     public void begin() {
         super.begin();
-        //buildAndScheduleDisplay();
+        buildAndScheduleDisplay();
     }
 
     public void buildAndScheduleDisplay() {
