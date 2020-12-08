@@ -8,7 +8,10 @@ import jade.content.lang.sl.SLCodec;
 import jade.content.onto.Ontology;
 import jade.content.onto.basic.Action;
 import jade.core.AID;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.FailureException;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
 import jade.domain.JADEAgentManagement.JADEManagementOntology;
 import jade.domain.JADEAgentManagement.ShutdownPlatform;
 import jade.wrapper.ControllerException;
@@ -17,9 +20,11 @@ import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
+import sajas.domain.DFService;
 import sajas.proto.SubscriptionResponder;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Vector;
 
 import sajas.core.Runtime;
@@ -84,14 +89,29 @@ public class UtilitySubResponder extends SubscriptionResponder {
         super.handleCancel(cancel);
 
         if(getSubscriptions().size() == 0){
-            System.out.println("HORA DE SAIR JOVENS");
-
             try {
-                myAgent.getContainerController().getPlatformController().kill();
-            } catch (ControllerException e) {
+                DFAgentDescription dfd = new DFAgentDescription();
+                ServiceDescription sd = new ServiceDescription();
+                sd.setType("Data Recorder");
+                dfd.addServices(sd);
+
+
+                DFAgentDescription[] dataRecorder = DFService.search(myAgent, dfd);
+
+                if(dataRecorder != null){
+                    ACLMessage inform = new ACLMessage(ACLMessage.INFORM);
+                    inform.setContentObject(((CUClass)myAgent).getInfo());
+                    inform.addReceiver(dataRecorder[0].getName());
+
+                    myAgent.send(inform);
+                }
+
+                else{
+                    System.err.println("SOMETHING WENT WRONG");
+                }
+            } catch (FIPAException | IOException e) {
                 e.printStackTrace();
             }
-
 
         }
 

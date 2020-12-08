@@ -1,4 +1,5 @@
 import Agents.CUClass;
+import Agents.DataRecorderAgent;
 import Agents.Student;
 import Utils.Parity;
 
@@ -30,6 +31,7 @@ public class Main extends Repast3Launcher {
 
     private List<Student> students;
     private List<CUClass> classes;
+    private DataRecorderAgent dataRecorderAgent;
 
     private OpenSequenceGraph graph = null;
 
@@ -74,12 +76,17 @@ public class Main extends Repast3Launcher {
                 classes.add(cuClassAgent);
             }
 
+            dataRecorderAgent = new DataRecorderAgent(classes);
+            AgentController dataController = mainContainer.acceptNewAgent("dataRecorder" , dataRecorderAgent);
+            dataController.start();
+
             for (int i = 0; i < numberOfStudents; i++) {
                 Student studentAgent = new Student(Parity.EVEN);
                 AgentController student = mainContainer.acceptNewAgent("Student" + i, studentAgent);
                 student.start();
                 students.add(studentAgent);
             }
+
 
         } catch (StaleProxyException e) {
             e.printStackTrace();

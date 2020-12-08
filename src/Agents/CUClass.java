@@ -2,6 +2,7 @@ package Agents;
 
 import Behaviours.AssignResponder;
 import Behaviours.UtilitySubResponder;
+import Utils.CUClassInfo;
 import Utils.Parity;
 import sajas.core.Agent;
 
@@ -146,5 +147,9 @@ public class CUClass extends Agent {
             DFService.deregister(this);
         } catch (Exception e) {
         }
+    }
+
+    public CUClassInfo getInfo(){
+        return new CUClassInfo(evenStudents,occupiedSeats,capacity);
     }
 }
