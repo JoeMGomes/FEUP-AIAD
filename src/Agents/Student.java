@@ -50,7 +50,7 @@ public class Student extends Agent {
         classesUtility = new HashMap<AID, Float>();
 
         // Add behaviour related to the subscription of each class utility
-        addBehaviour(new StudentSubWaker(this,2000 ));
+        addBehaviour(new StudentSubWaker(this, 20));
     }
 
     /**

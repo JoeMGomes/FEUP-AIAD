@@ -5,7 +5,6 @@ import sajas.core.Agent;
 import jade.lang.acl.ACLMessage;
 import sajas.proto.AchieveREInitiator;
 
-import java.util.Random;
 import java.util.Vector;
 
 public class AssignInitiator extends AchieveREInitiator {
@@ -20,8 +19,6 @@ public class AssignInitiator extends AchieveREInitiator {
     protected void handleAgree(ACLMessage agree){
         //Simply informative print
         System.out.println("Agent " + myAgent.getLocalName() +  " : "  +agree.getSender().getLocalName() + " agreed to add");
-
-
     }
 
     protected void handleInform(ACLMessage inform) {
@@ -39,13 +36,6 @@ public class AssignInitiator extends AchieveREInitiator {
     protected void handleRefuse(ACLMessage refuse) {
         System.out.println("Agent " + myAgent.getLocalName() +  " : "  + refuse.getSender().getLocalName()+" said invalid utility");
         nResponders--;
-
-        //wait for subscription update
-        /* try {
-            Thread.sleep(new Random().nextInt(2500 - 1000) + 1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } */
 
         ((Student)myAgent).chooseClass();
     }

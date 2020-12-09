@@ -1,10 +1,11 @@
 import Agents.CUClass;
-import Agents.DataRecorderAgent;
+import Utils.DataRecorder;
 import Agents.Student;
 import Utils.Parity;
 
 import jade.core.Profile;
 import jade.core.ProfileImpl;
+import jade.wrapper.ControllerException;
 import jade.wrapper.StaleProxyException;
 
 import sajas.core.Runtime;
@@ -23,6 +24,7 @@ import java.util.List;
 public class Main extends Repast3Launcher {
     private static final boolean BATCH_MODE = true;
     private static final String PARAMS_FILE_PATH = "./src/Parameters.pf"; // null to set parameters manually
+//    private static final String PARAMS_FILE_PATH = null;
 
     int numberOfOddStudents = 2;
     int numberOfEvenStudents = 3;
@@ -34,8 +36,10 @@ public class Main extends Repast3Launcher {
 
     private List<Student> students;
     private List<CUClass> classes;
-    private DataRecorderAgent dataRecorderAgent;
+    private DataRecorder dataRecorder;
+    ContainerController mainContainer;
 
+    private Schedule schedule;
     private OpenSequenceGraph graph = null;
 
     public static void main(String[] args) {
@@ -67,8 +71,8 @@ public class Main extends Repast3Launcher {
         Runtime rt = Runtime.instance();
         Profile p = new ProfileImpl();
 
-        ContainerController mainContainer = rt.createMainContainer(p);
-        launchAgents(mainContainer);
+        mainContainer = rt.createMainContainer(p);
+        launchAgents();
     }
 
     private void addEvenStudent(ContainerController mainContainer, int i) throws StaleProxyException {
@@ -92,7 +96,7 @@ public class Main extends Repast3Launcher {
         classes.add(cuClassAgent);
     }
 
-    private void launchAgents(ContainerController mainContainer){
+    private void launchAgents(){
         students = new ArrayList<Student>();
         classes = new ArrayList<CUClass>();
 
@@ -101,9 +105,7 @@ public class Main extends Repast3Launcher {
             addClass(30, 5, 1, mainContainer, 1);
             addClass(30, 10, 9, mainContainer, 2);
 
-            dataRecorderAgent = new DataRecorderAgent(classes);
-            AgentController dataController = mainContainer.acceptNewAgent("dataRecorder" , dataRecorderAgent);
-            dataController.start();
+            dataRecorder = new DataRecorder(classes);
 
             for (int i = 0; i < numberOfOddStudents; i++) {
                 addOddStudent(mainContainer, i+1);
@@ -122,9 +124,28 @@ public class Main extends Repast3Launcher {
     @Override
     public void begin() {
         super.begin();
+        schedule = new Schedule();
+
+        scheduleEndCheck();
 
         if(!BATCH_MODE){
             buildAndScheduleDisplay();
+        }
+    }
+
+    public void scheduleEndCheck() {
+        getSchedule().scheduleActionAtInterval(100, this, "checkEnd");
+    }
+
+    public void checkEnd () {
+
+        if (allAllocated()){
+            dataRecorder.addFinalInfoAndProcess(classes);
+            try {
+                mainContainer.getPlatformController().kill();
+            } catch (ControllerException e) {
+                e.printStackTrace();
+            }
         }
     }
 

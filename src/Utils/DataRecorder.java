@@ -1,12 +1,6 @@
-package Agents;
+package Utils;
 
-import Behaviours.ResultsListener;
-import Utils.CUClassInfo;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
-import jade.domain.FIPAException;
-import jade.wrapper.ControllerException;
-import sajas.core.Agent;
+import Agents.CUClass;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -15,69 +9,47 @@ import java.util.HashMap;
 import java.util.List;
 
 import jade.core.AID;
-import sajas.domain.DFService;
 
-public class DataRecorderAgent extends Agent {
+public class DataRecorder {
 
     private HashMap<AID, CUClassInfo> initialValues = new HashMap<>();
     private HashMap<AID, CUClassInfo> finalValues = new HashMap<>();
 
-    public DataRecorderAgent(List<CUClass> classes) {
+    public DataRecorder(List<CUClass> classes) {
 
         for( CUClass c : classes ){
             initialValues.put(c.getAID(),c.getInfo());
         }
-
     }
 
-    public void addFinalInfo(AID id, CUClassInfo c){
-        finalValues.put(id,c);
-
-        if(initialValues.size() == finalValues.size()){
-
-            System.out.println("ENDING ---------------------");
-
-            /* Proccess data and store it
-             *
-             */
-            processData();
-
-            for (AID agentID : finalValues.keySet()) {
-                System.out.println(( agentID.getLocalName() + " " + finalValues.get(agentID).toString()));
-            }
-            System.out.println("ENDED ---------------------");
-
-            //Terminate program
-            try {
-                getContainerController().getPlatformController().kill();
-            } catch (ControllerException e) {
-                e.printStackTrace();
-            }
+    public void addFinalInfoAndProcess(List<CUClass> classes){
+        for( CUClass c : classes ){
+            finalValues.put(c.getAID(),c.getInfo());
         }
-    }
+        System.out.println("Initial ---------------------");
 
-    @Override
-    public void setup() {
-
-        // Register service in DF Agent
-        ServiceDescription sd = new ServiceDescription();
-        sd.setType("Data Recorder");
-        sd.setName(getLocalName());
-        register(sd);
-
-        addBehaviour(new ResultsListener());
-    }
-
-    void register(ServiceDescription sd) {
-        DFAgentDescription dfd = new DFAgentDescription();
-        dfd.setName(getAID());
-        dfd.addServices(sd);
-
-        try {
-            DFService.register(this, dfd);
-        } catch (FIPAException fe) {
-            fe.printStackTrace();
+        for (AID agentID : initialValues.keySet()) {
+            System.out.println(( agentID.getLocalName() + " " + initialValues.get(agentID).toString()));
         }
+
+        System.out.println("Final ---------------------");
+
+        for (AID agentID : finalValues.keySet()) {
+            System.out.println(( agentID.getLocalName() + " " + finalValues.get(agentID).toString()));
+        }
+
+        System.out.println("ENDING ---------------------");
+
+        /* Process data and store it
+         *
+         */
+        processData();
+
+        for (AID agentID : finalValues.keySet()) {
+            System.out.println(( agentID.getLocalName() + " " + finalValues.get(agentID).toString()));
+        }
+        System.out.println("ENDED ---------------------");
+
     }
 
     private float parityAverage(HashMap<AID, CUClassInfo> values) {

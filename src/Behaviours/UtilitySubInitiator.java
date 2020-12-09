@@ -42,7 +42,6 @@ public class UtilitySubInitiator extends SubscriptionInitiator {
         }
         Vector<ACLMessage> v = new Vector<ACLMessage>();
         v.addElement(subscription);
-//        System.out.println("\n\nNEW STUDENT=" + myAgent.getLocalName() + "\n");
         return v;
     }
 
@@ -75,14 +74,6 @@ public class UtilitySubInitiator extends SubscriptionInitiator {
         } else {
             System.out.println("Agent " + myAgent.getLocalName() + " : " + " confirmed all subscriptions");
 
-
-            //Sleep to ensure it receives a utility subscription update
-            //Sleep between 0.5 and 2.5seconds
-               /* try {
-                    Thread.sleep(new Random().nextInt(2500- 500) + 500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }*/
             ((Student) myAgent).chooseClass();
         }
     }
