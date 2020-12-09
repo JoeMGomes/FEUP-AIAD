@@ -21,11 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main extends Repast3Launcher {
-    private static final boolean BATCH_MODE = false;
+    private static final boolean BATCH_MODE = true;
+    private static final String PARAMS_FILE_PATH = "./src/Parameters.pf"; // null to set parameters manually
 
-    int numberOfStudents = 5;
+    int numberOfOddStudents = 2;
+    int numberOfEvenStudents = 3;
+
+    // TODO: Ver o que fazer com os parâmetros das turmas
     int numberOfClasses = 2;
-    int numberOfEvenStudents = 0;
     int numberOfOccupiedSeats = 0;
     int numberOfTotalSeats = 0;
 
@@ -43,7 +46,7 @@ public class Main extends Repast3Launcher {
         init.setNumRuns(2);   // works only in batch mode
 
         // load model into simulation
-        init.loadModel(new Main(), null, runMode);
+        init.loadModel(new Main(), PARAMS_FILE_PATH, runMode);
 
     }
 
@@ -57,6 +60,10 @@ public class Main extends Repast3Launcher {
 
     @Override
     public void launchJADE() {
+        System.out.println(numberOfEvenStudents);
+        System.out.println(numberOfOddStudents);
+        System.out.println(numberOfClasses);
+
         Runtime rt = Runtime.instance();
         Profile p = new ProfileImpl();
 
@@ -98,12 +105,13 @@ public class Main extends Repast3Launcher {
             AgentController dataController = mainContainer.acceptNewAgent("dataRecorder" , dataRecorderAgent);
             dataController.start();
 
-            addEvenStudent(mainContainer, 1);
-            addEvenStudent(mainContainer, 2);
-            addEvenStudent(mainContainer, 3);
-            addEvenStudent(mainContainer, 4);
-            addOddStudent(mainContainer, 5);
-            addOddStudent(mainContainer, 6);
+            for (int i = 0; i < numberOfOddStudents; i++) {
+                addOddStudent(mainContainer, i+1);
+            }
+
+            for (int i = 0; i < numberOfEvenStudents; i++) {
+                addEvenStudent(mainContainer, numberOfOddStudents + i +1);
+            }
 
         } catch (StaleProxyException e) {
             e.printStackTrace();
@@ -114,7 +122,10 @@ public class Main extends Repast3Launcher {
     @Override
     public void begin() {
         super.begin();
-        buildAndScheduleDisplay();
+
+        if(!BATCH_MODE){
+            buildAndScheduleDisplay();
+        }
     }
 
     public void buildAndScheduleDisplay() {
@@ -140,16 +151,16 @@ public class Main extends Repast3Launcher {
 
     @Override
     public String[] getInitParam() {
-        return new String[] { "numberOfStudents", "numberOfClasses", "numberOfEvenStudents", "numberOfOccupiedSeats",
+        return new String[] { "numberOfOddStudents", "numberOfEvenStudents", "numberOfClasses", "numberOfOccupiedSeats",
                 "numberOfTotalSeats" };
     }
 
-    public int getNumberOfStudents() {
-        return numberOfStudents;
+    public int getNumberOfOddStudents() {
+        return numberOfOddStudents;
     }
 
-    public void setNumberOfStudents(int numberOfStudents) {
-        this.numberOfStudents = numberOfStudents;
+    public void setNumberOfOddStudents(int numberOfOddStudents) {
+        this.numberOfOddStudents = numberOfOddStudents;
     }
 
     public int getNumberOfClasses() {

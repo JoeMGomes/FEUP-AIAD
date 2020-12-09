@@ -11,7 +11,9 @@ public class StudentSubWaker extends WakerBehaviour {
     }
 
     public void onWake() {
+        // Find all classes AID's
         ((Student)myAgent).getClasses();
+
         UtilitySubInitiator utilitySubInitiator = new UtilitySubInitiator(myAgent, ((Student) myAgent).getClassesUtility().size());
         ((Student) myAgent).setUtilitySubInitiator(utilitySubInitiator);
         myAgent.addBehaviour(utilitySubInitiator);

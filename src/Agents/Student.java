@@ -48,10 +48,7 @@ public class Student extends Agent {
 
     protected void setup(){
         classesUtility = new HashMap<AID, Float>();
-        // Find all classes AID's
-        // getClasses();
 
-        //getParityArgs();
         // Add behaviour related to the subscription of each class utility
         addBehaviour(new StudentSubWaker(this,2000 ));
     }
@@ -74,36 +71,6 @@ public class Student extends Agent {
             }
 
         } catch (FIPAException fe) { fe.printStackTrace(); }
-    }
-
-    /**
-     * Reads and sets initialization arguments related to
-     * - Parity
-     * Sets parity to Even in case of problems
-     */
-    private void getParityArgs(){
-
-        Object[] args = getArguments();
-        String s;
-
-        if (args != null) {
-            if(args.length == 0){
-                System.err.println("Invalid Parity. Setting to Even");
-                parity = Parity.EVEN;
-                return;
-            }
-
-            s = (String) args[0];
-
-            if( s.equalsIgnoreCase("Odd")){
-                parity = Parity.ODD;
-            } else if ( s.equalsIgnoreCase("Even")) {
-                parity = Parity.EVEN;
-            } else {
-                System.err.println("Invalid Parity. Setting to Even");
-                parity = Parity.EVEN;
-            }
-        }
     }
 
     /**

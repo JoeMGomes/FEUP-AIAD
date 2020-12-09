@@ -45,43 +45,12 @@ public class CUClass extends Agent {
         sd.setName(getLocalName());
         register(sd);
 
-        // Read initialization arguments
-        //setFields();
-
         // Start utility subscription behaviour
         subscriptionBehaviour = new UtilitySubResponder(this);
         addBehaviour(subscriptionBehaviour);
 
         // Start student assignment behaviour
         addBehaviour(new AssignResponder(this));
-    }
-
-    /**
-     * Reads and sets initialization arguments related to
-     *  - Capacity of the room
-     *  - Occupied Seats
-     *  - Number of even students
-     */
-    public void setFields() {
-        Object[] argsOBJ = getArguments();
-
-        String[] args = ((String) argsOBJ[0]).split(" ");
-
-        if (args.length != 3) {
-            System.err.println("Invalid Args. Aborting Class...");
-            takeDown();
-            return;
-        } else {
-            capacity = Integer.parseInt(args[0]);
-            occupiedSeats = Integer.parseInt(args[1]);
-            evenStudents = Integer.parseInt(args[2]);
-
-            if (capacity < occupiedSeats || occupiedSeats < evenStudents) {
-                System.err.println("Inconsistent data. Aborting Class...");
-                takeDown();
-                return;
-            }
-        }
     }
 
     /**
