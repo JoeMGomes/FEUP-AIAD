@@ -1,19 +1,12 @@
 runs: 1
 numberOfEvenStudents {
  set_list: 5 5 10 20
- {
-  runs: 1
-  numberOfClasses {
-   set_list: 3 4 6
-  }
- }
+
 }
 numberOfOddStudents {
  set_list: 5 5 10 20
- {
-   runs: 1
-   numberOfClasses {
-    set_list: 3 4 6
-   }
- }
+}
+
+classesStats {
+ set_string_list: 30.10.4:30.20.15 30.10.4:30.20.15:10.5.3
 }

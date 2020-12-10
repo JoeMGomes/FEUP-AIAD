@@ -31,7 +31,7 @@ public class CUClass extends Agent {
      */
     private UtilitySubResponder subscriptionBehaviour;
 
-    public CUClass(int capacity, int occupiedSeats, int evenStudents) {
+    public CUClass(int capacity, int occupiedSeats, float evenStudents) {
         this.capacity = capacity;
         this.occupiedSeats = occupiedSeats;
         this.evenStudents = evenStudents;
@@ -119,6 +119,6 @@ public class CUClass extends Agent {
     }
 
     public CUClassInfo getInfo(){
-        return new CUClassInfo(evenStudents,occupiedSeats,capacity);
+        return new CUClassInfo(capacity,occupiedSeats,evenStudents);
     }
 }
