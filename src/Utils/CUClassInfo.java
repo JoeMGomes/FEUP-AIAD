@@ -17,7 +17,7 @@ public class CUClassInfo implements Serializable {
      */
     public int capacity;
 
-    public CUClassInfo(float e,int o, int c){
+    public CUClassInfo(int c, int o, float e){
         evenStudents = e;
         occupiedSeats = o;
         capacity = c;
