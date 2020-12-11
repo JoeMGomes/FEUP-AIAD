@@ -19,11 +19,12 @@ import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
 
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main extends Repast3Launcher {
-    private static final boolean BATCH_MODE = false;
+    private static final boolean BATCH_MODE = true;
     private static final String PARAMS_FILE_PATH = "./src/Parameters.pf"; // null to set parameters manually
 //    private static final String PARAMS_FILE_PATH = null;
 
@@ -43,11 +44,16 @@ public class Main extends Repast3Launcher {
     private OpenSequenceGraph graph = null;
 
     public static void main(String[] args) {
+        File file = new File("data.csv");
+        if (file.exists()) {
+            file.delete();
+        }
+
         boolean runMode = BATCH_MODE;
 
         // create a simulation
         SimInit init = new SimInit();
-        //init.setNumRuns(2);   // works only in batch mode
+        init.setNumRuns(5);   // works only in batch mode
 
         // load model into simulation
         init.loadModel(new Main(), PARAMS_FILE_PATH, runMode);

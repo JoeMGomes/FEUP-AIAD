@@ -115,9 +115,7 @@ public class DataRecorder {
     private void storeInFile(float parity, float occupation) {
         File file = new File("data.csv");
         try {
-            if(file.createNewFile()) {
-                file.deleteOnExit();
-            }
+            file.createNewFile();
             FileWriter writer = new FileWriter(file, true);
             writer.write(Float.toString(parity)+','+Float.toString(occupation)+"\n");
             writer.close();
