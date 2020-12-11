@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main extends Repast3Launcher {
-    private static final boolean BATCH_MODE = true;
+    private static final boolean BATCH_MODE = false;
     private static final String PARAMS_FILE_PATH = "./src/Parameters.pf"; // null to set parameters manually
 //    private static final String PARAMS_FILE_PATH = null;
 
@@ -104,7 +104,7 @@ public class Main extends Repast3Launcher {
 
             List<CUClassInfo> classParams = parseClassString(classesStats);
             for(int i = 0; i < classParams.size(); i++){
-                 CUClassInfo c = classParams.get(i);
+                CUClassInfo c = classParams.get(i);
                 addClass(c.capacity,c.occupiedSeats,c.evenStudents, mainContainer, i);
             }
 
@@ -162,14 +162,27 @@ public class Main extends Repast3Launcher {
             graph.dispose();
         graph = new OpenSequenceGraph("Number of Students and Classes", this);
         graph.setAxisTitles("time", "quantity");
-        graph.addSequence("Students", () -> {
-            return this.students.size();
+        graph.addSequence("Students to be allocated", () -> {
+            return students.size() - numberOfAllocatedStudents();
         }, Color.blue);
-        graph.addSequence("Classes", () -> {
-            return this.classes.size();
-        }, Color.red);
+
+        for (CUClass c : classes) {
+            graph.addSequence("Class " + classes.indexOf(c), () -> {
+                return c.getInfo().occupiedSeats;
+            }, Color.red);
+        }
 
         graph.display();
+    }
+
+    public int numberOfAllocatedStudents (){
+        int allocatedStudents = 0;
+        for (Student s: students) {
+            if (s.isAllocated()){
+                allocatedStudents++;
+            }
+        }
+        return allocatedStudents;
     }
 
     /**
