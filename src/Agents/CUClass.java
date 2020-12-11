@@ -121,4 +121,8 @@ public class CUClass extends Agent {
     public CUClassInfo getInfo(){
         return new CUClassInfo(capacity,occupiedSeats,evenStudents);
     }
+
+    public float getSatisfaction(){
+        return (float)occupiedSeats /capacity *  (0.5f - Math.abs( (evenStudents/occupiedSeats - 0.5f))) ;
+    }
 }

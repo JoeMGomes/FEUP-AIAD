@@ -178,7 +178,7 @@ public class Main extends Repast3Launcher {
 
         graphParity.addSequence("Students to be allocated", () -> {
             return students.size() - numberOfAllocatedStudents();
-        }, Color.blue);
+        }, Color.BLUE);
 
         for (CUClass c : classes) {
             graphParity.addSequence("Parity (%) of Class " + (classes.indexOf(c) + 1), () -> {
@@ -194,18 +194,38 @@ public class Main extends Repast3Launcher {
 
         graphOccupation.addSequence("Students to be allocated", () -> {
             return students.size() - numberOfAllocatedStudents();
-        }, Color.blue);
+        }, Color.BLUE);
 
         for (CUClass c : classes) {
             graphOccupation.addSequence("Occupation of Class " + (classes.indexOf(c) + 1), () -> {
                 return c.getInfo().occupiedSeats;
-            }, Color.red);
+            }, Color.RED);
         }
 
         graphOccupation.addSequence("Occupation Derivation*100", () -> {
             dataRecorder.updateFinalValues(classes);
             return dataRecorder.calculateOccupationDeviation(dataRecorder.finalValues)*100;
         }, Color.GREEN);
+
+
+        //Total satisfaction
+        graphOccupation.addSequence("System Satisfaction", ()->{
+            float satisf = 0;
+            for (CUClass c: classes) {
+                satisf += c.getSatisfaction();
+            }
+            return satisf * 100;
+        }, Color.MAGENTA);
+
+        //Total satisfaction
+        graphParity.addSequence("System Satisfaction", ()->{
+            float satisf = 0;
+            for (CUClass c: classes) {
+                satisf += c.getSatisfaction();
+            }
+            return satisf * 100;
+        }, Color.MAGENTA);
+
 
         graphParity.display();
         graphOccupation.display();
