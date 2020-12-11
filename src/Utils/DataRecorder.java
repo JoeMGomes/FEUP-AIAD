@@ -13,19 +13,26 @@ import jade.core.AID;
 public class DataRecorder {
 
     private HashMap<AID, CUClassInfo> initialValues = new HashMap<>();
-    private HashMap<AID, CUClassInfo> finalValues = new HashMap<>();
+    public HashMap<AID, CUClassInfo> finalValues = new HashMap<>();
 
     public DataRecorder(List<CUClass> classes) {
 
         for( CUClass c : classes ){
             initialValues.put(c.getAID(),c.getInfo());
         }
+
     }
 
-    public void addFinalInfoAndProcess(List<CUClass> classes){
+    public void updateFinalValues(List<CUClass> classes){
         for( CUClass c : classes ){
             finalValues.put(c.getAID(),c.getInfo());
         }
+    }
+
+    public void addFinalInfoAndProcess(List<CUClass> classes){
+
+        updateFinalValues(classes);
+
         System.out.println("Initial ---------------------");
 
         for (AID agentID : initialValues.keySet()) {
@@ -63,7 +70,7 @@ public class DataRecorder {
         return (float)sum / values.size();
     }
 
-    private float calculateParityDeviation(HashMap<AID, CUClassInfo> values) {
+    public float calculateParityDeviation(HashMap<AID, CUClassInfo> values) {
         float average = parityAverage(values);
         float sum = 0;
 
@@ -86,7 +93,7 @@ public class DataRecorder {
         return (float)sum / values.size();
     }
 
-    private float calculateOccupationDeviation(HashMap<AID, CUClassInfo> values) {
+    public float calculateOccupationDeviation(HashMap<AID, CUClassInfo> values) {
         float average = occupationAverage(values);
         float sum = 0;
 

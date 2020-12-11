@@ -1,12 +1,12 @@
 runs: 1
 numberOfEvenStudents {
- set_list: 5 5 10 20
+ set_list: 5 4 3 3
 
 }
 numberOfOddStudents {
- set_list: 5 5 10 20
+ set_list: 0 1 2 2
 }
 
 classesStats {
- set_string_list: 30.10.4:30.20.15 30.10.4:30.20.15:10.5.3
+ set_string_list: 30.15.5:30.20.10 30.10.1:30.10.9 30.6.3:30.20.10:30.30.15 30.10.1:30.10.9:30.10.5
 }

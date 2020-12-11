@@ -143,7 +143,7 @@ public class Main extends Repast3Launcher {
     }
 
     public void scheduleEndCheck() {
-        getSchedule().scheduleActionAtInterval(100, this, "checkEnd");
+        getSchedule().scheduleActionAtInterval(100, this, "checkEnd", Schedule.LAST);
     }
 
     public void checkEnd() {
@@ -177,6 +177,16 @@ public class Main extends Repast3Launcher {
                 return c.getInfo().occupiedSeats;
             }, Color.red);
         }
+
+        graph.addSequence("Parity Deviation*100", ()-> {
+            dataRecorder.updateFinalValues(classes);
+            return dataRecorder.calculateParityDeviation(dataRecorder.finalValues) * 100;
+        }, Color.ORANGE);
+
+        graph.addSequence("Occupation Derivation*100", () -> {
+            dataRecorder.updateFinalValues(classes);
+            return dataRecorder.calculateOccupationDeviation(dataRecorder.finalValues)*100;
+        }, Color.GREEN);
 
         graph.display();
     }
