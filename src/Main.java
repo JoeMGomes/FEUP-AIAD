@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main extends Repast3Launcher {
-    private static final boolean BATCH_MODE = true;
+    private static final boolean BATCH_MODE = false;
     private static final String PARAMS_FILE_PATH = "./src/Parameters.pf"; // null to set parameters manually
 //    private static final String PARAMS_FILE_PATH = null;
 
@@ -41,7 +41,8 @@ public class Main extends Repast3Launcher {
     ContainerController mainContainer;
 
     private Schedule schedule;
-    private OpenSequenceGraph graph = null;
+    private OpenSequenceGraph graphParity = null;
+    private OpenSequenceGraph graphOccupation = null;
 
     public static void main(String[] args) {
         File file = new File("data.csv");
@@ -160,35 +161,54 @@ public class Main extends Repast3Launcher {
 
     public void buildAndScheduleDisplay() {
         buildGraph();
-        getSchedule().scheduleActionAtInterval(1, graph, "step", Schedule.LAST);
+        getSchedule().scheduleActionAtInterval(1, graphParity, "step", Schedule.LAST);
+        getSchedule().scheduleActionAtInterval(1, graphOccupation, "step", Schedule.LAST);
     }
 
     public void buildGraph() {
-        if (graph != null)
-            graph.dispose();
-        graph = new OpenSequenceGraph("Number of Students and Classes", this);
-        graph.setAxisTitles("time", "quantity");
-        graph.addSequence("Students to be allocated", () -> {
+        if (graphParity != null)
+            graphParity.dispose();
+        if (graphOccupation != null)
+            graphOccupation.dispose();
+
+        graphParity = new OpenSequenceGraph("Parity of students in classes", this);
+        graphOccupation= new OpenSequenceGraph("Occupation of students in classes", this);
+        graphParity.setAxisTitles("time", "quantity");
+        graphOccupation.setAxisTitles("time", "quantity");
+
+        graphParity.addSequence("Students to be allocated", () -> {
             return students.size() - numberOfAllocatedStudents();
         }, Color.blue);
 
         for (CUClass c : classes) {
-            graph.addSequence("Class " + (classes.indexOf(c) + 1), () -> {
-                return c.getInfo().occupiedSeats;
-            }, Color.red);
+            graphParity.addSequence("Parity (%) of Class " + (classes.indexOf(c) + 1), () -> {
+                return (float)c.getInfo().evenStudents / c.getInfo().occupiedSeats*100;
+            }, Color.BLACK);
         }
 
-        graph.addSequence("Parity Deviation*100", ()-> {
+        graphParity.addSequence("Parity Deviation*100", ()-> {
             dataRecorder.updateFinalValues(classes);
             return dataRecorder.calculateParityDeviation(dataRecorder.finalValues) * 100;
         }, Color.ORANGE);
 
-        graph.addSequence("Occupation Derivation*100", () -> {
+
+        graphOccupation.addSequence("Students to be allocated", () -> {
+            return students.size() - numberOfAllocatedStudents();
+        }, Color.blue);
+
+        for (CUClass c : classes) {
+            graphOccupation.addSequence("Occupation of Class " + (classes.indexOf(c) + 1), () -> {
+                return c.getInfo().occupiedSeats;
+            }, Color.red);
+        }
+
+        graphOccupation.addSequence("Occupation Derivation*100", () -> {
             dataRecorder.updateFinalValues(classes);
             return dataRecorder.calculateOccupationDeviation(dataRecorder.finalValues)*100;
         }, Color.GREEN);
 
-        graph.display();
+        graphParity.display();
+        graphOccupation.display();
     }
 
     public int numberOfAllocatedStudents (){
