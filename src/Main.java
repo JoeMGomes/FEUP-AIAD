@@ -111,7 +111,7 @@ public class Main extends Repast3Launcher {
             List<CUClassInfo> classParams = parseClassString(classesStats);
             for(int i = 0; i < classParams.size(); i++){
                 CUClassInfo c = classParams.get(i);
-                addClass(c.capacity,c.occupiedSeats,c.evenStudents, mainContainer, i);
+                addClass(c.capacity,c.occupiedSeats,c.evenStudents, mainContainer, i + 1);
             }
 
             dataRecorder = new DataRecorder(classes);
@@ -173,7 +173,7 @@ public class Main extends Repast3Launcher {
         }, Color.blue);
 
         for (CUClass c : classes) {
-            graph.addSequence("Class " + classes.indexOf(c), () -> {
+            graph.addSequence("Class " + (classes.indexOf(c) + 1), () -> {
                 return c.getInfo().occupiedSeats;
             }, Color.red);
         }
