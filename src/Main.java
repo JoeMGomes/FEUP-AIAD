@@ -171,8 +171,8 @@ public class Main extends Repast3Launcher {
         if (graphOccupation != null)
             graphOccupation.dispose();
 
-        graphParity = new OpenSequenceGraph("Parity of students in classes", this);
-        graphOccupation= new OpenSequenceGraph("Occupation of students in classes", this);
+        graphParity = new OpenSequenceGraph("Parity Graph - Even: " + getTotalEven() + " Odd: " + getTotalOdd(), this);
+        graphOccupation= new OpenSequenceGraph("Occupation Graph -Initially Allocated: " + getInitiallyAllocated() + " Capacity: " + getTotalCapacity(), this);
         graphParity.setAxisTitles("time", "quantity");
         graphOccupation.setAxisTitles("time", "quantity");
 
@@ -244,7 +244,7 @@ public class Main extends Repast3Launcher {
     /**
      *
      * @param info String passed to Repast with all classes params formatted as following
-     * Format: "Capacity1.OccupiedSeats1.EvenStudents1:Capacity2.OccupiedSeats2.EvenStudents2
+     * Format: "Capacity1.OccupiedSeats1.EvenStudents1:Capacity2.OccupiedSeats2.EvenStudents2"
      * Note: Any invalid class will be ignored
      * @return List of CUClassInfo obtained from 'info'
      */
@@ -314,6 +314,48 @@ public class Main extends Repast3Launcher {
 
     public void setClassesStats(String classesStats) {
         this.classesStats = classesStats;
+    }
+
+    public int getTotalOdd(){
+        int allocated = 0;
+
+        for(CUClass c : classes){
+            CUClassInfo i = c.getInfo();
+            allocated += i.occupiedSeats - i.evenStudents;
+        }
+
+        return this.numberOfOddStudents + allocated;
+    }
+
+    public int getTotalEven(){
+        int allocated = 0;
+
+        for(CUClass c : classes){
+            CUClassInfo i = c.getInfo();
+            allocated += i.evenStudents;
+        }
+
+        return this.numberOfEvenStudents + allocated;
+    }
+
+    public int getInitiallyAllocated(){
+        int allocated = 0;
+
+        for(CUClass c : classes){
+            CUClassInfo i = c.getInfo();
+            allocated += i.occupiedSeats;
+        }
+        return  allocated;
+    }
+
+    public int getTotalCapacity(){
+        int allocated = 0;
+
+        for(CUClass c : classes){
+            CUClassInfo i = c.getInfo();
+            allocated += i.capacity;
+        }
+        return  allocated;
     }
 
 }
