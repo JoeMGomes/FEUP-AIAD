@@ -214,7 +214,7 @@ public class Main extends Repast3Launcher {
             for (CUClass c: classes) {
                 satisf += c.getSatisfaction();
             }
-            return satisf * 100;
+            return satisf * 100 / classes.size();
         }, Color.MAGENTA);
 
         //Total satisfaction
@@ -223,7 +223,7 @@ public class Main extends Repast3Launcher {
             for (CUClass c: classes) {
                 satisf += c.getSatisfaction();
             }
-            return satisf * 100;
+            return satisf * 100 / classes.size();
         }, Color.MAGENTA);
 
 
