@@ -123,6 +123,6 @@ public class CUClass extends Agent {
     }
 
     public float getSatisfaction(){
-        return (float)occupiedSeats /capacity *  (0.5f - Math.abs( (evenStudents/occupiedSeats - 0.5f))) ;
+        return ( 1.0f - Math.abs((float)occupiedSeats /capacity - 1.0f)) *  (0.5f - Math.abs( (evenStudents/occupiedSeats - 0.5f))) ;
     }
 }
